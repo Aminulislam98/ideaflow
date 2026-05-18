@@ -13,8 +13,6 @@ const user = {
   name: "Aminul Islam",
   email: "aminul@aminulislam.co.uk",
   avatar: "https://i.pravatar.cc/150?img=33",
-  cover:
-    "https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1200&auto=format&fit=crop&q=60",
   verified: true,
   location: "London, UK",
   joined: "January 2024",
@@ -109,150 +107,70 @@ const categoryColors = {
 
 export default function ProfilePage() {
   return (
-    <div className="min-h-screen w-full bg-[#f0f2f5]">
-      {/* Cover + Avatar */}
-      <div className="w-full bg-white border-b border-black/[0.06]">
-        {/* Cover Photo */}
-        <div className="relative w-full h-[220px] sm:h-[280px] lg:h-[320px]">
-          <Image
-            fill
-            src={user.cover}
-            alt="Cover"
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-black/20" />
-        </div>
-
-        {/* Avatar + Name row */}
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12 sm:-mt-14 pb-5">
-            {/* Avatar */}
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-white relative shrink-0 shadow-md">
-              <Image
-                fill
-                src={user.avatar}
-                alt={user.name}
-                className="rounded-full object-cover"
-              />
-            </div>
-
-            {/* Name + stats */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between flex-1 gap-3 sm:pb-1">
+    <div className="min-h-screen w-full bg-[#f0f2f5] pt-16">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-6 flex flex-col gap-5">
+        {/* Profile Header Card */}
+        <div className="bg-white border border-black/[0.06] rounded-2xl p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            {/* Left — avatar + name + bio */}
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full relative shrink-0">
+                <Image
+                  fill
+                  src={user.avatar}
+                  alt={user.name}
+                  className="rounded-full object-cover"
+                />
+              </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h1 className="text-[20px] font-semibold text-black tracking-[-0.03em]">
+                  <h1 className="text-[17px] font-semibold text-black tracking-[-0.03em]">
                     {user.name}
                   </h1>
                   {user.verified && (
-                    <HiBadgeCheck className="text-blue-500 text-[18px] shrink-0" />
+                    <HiBadgeCheck className="text-blue-500 text-[16px] shrink-0" />
                   )}
                 </div>
-                <p className="text-[13px] font-normal text-black/40 tracking-[-0.1px] mt-0.5">
+                <p className="text-[12px] font-normal text-black/40 tracking-[-0.1px] mt-0.5 max-w-xs">
                   {user.bio}
                 </p>
               </div>
+            </div>
 
-              {/* Stats pills */}
-              <div className="flex items-center gap-2 shrink-0">
-                <div className="text-center px-4 py-2 bg-[#f0f2f5] rounded-xl">
-                  <p className="text-[16px] font-semibold text-black tracking-[-0.03em]">
-                    {user.totalIdeas}
-                  </p>
-                  <p className="text-[10px] font-normal text-black/40 tracking-[-0.1px]">
-                    Ideas
-                  </p>
-                </div>
-                <div className="text-center px-4 py-2 bg-[#f0f2f5] rounded-xl">
-                  <p className="text-[16px] font-semibold text-black tracking-[-0.03em]">
-                    {user.totalLikes}
-                  </p>
-                  <p className="text-[10px] font-normal text-black/40 tracking-[-0.1px]">
-                    Likes
-                  </p>
-                </div>
-                <div className="text-center px-4 py-2 bg-[#f0f2f5] rounded-xl">
-                  <p className="text-[16px] font-semibold text-black tracking-[-0.03em]">
-                    {user.totalComments}
-                  </p>
-                  <p className="text-[10px] font-normal text-black/40 tracking-[-0.1px]">
-                    Comments
-                  </p>
-                </div>
+            {/* Right — stats */}
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="text-center px-4 py-2.5 bg-[#f0f2f5] rounded-xl min-w-[72px]">
+                <p className="text-[18px] font-semibold text-black tracking-[-0.03em]">
+                  {user.totalIdeas}
+                </p>
+                <p className="text-[10px] font-normal text-black/40 tracking-[-0.1px]">
+                  Ideas
+                </p>
+              </div>
+              <div className="text-center px-4 py-2.5 bg-rose-50 rounded-xl min-w-[72px]">
+                <p className="text-[18px] font-semibold text-rose-500 tracking-[-0.03em]">
+                  {user.totalLikes}
+                </p>
+                <p className="text-[10px] font-normal text-rose-300 tracking-[-0.1px]">
+                  Likes
+                </p>
+              </div>
+              <div className="text-center px-4 py-2.5 bg-blue-50 rounded-xl min-w-[72px]">
+                <p className="text-[18px] font-semibold text-blue-500 tracking-[-0.03em]">
+                  {user.totalComments}
+                </p>
+                <p className="text-[10px] font-normal text-blue-300 tracking-[-0.1px]">
+                  Comments
+                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-6">
+        {/* Body — Posts left, Sidebar right */}
         <div className="flex flex-col lg:flex-row gap-5 items-start">
-          {/* LEFT — User Details */}
-          <div className="w-full lg:w-[300px] shrink-0 flex flex-col gap-4">
-            {/* About Card */}
-            <div className="bg-white border border-black/[0.06] rounded-2xl p-5">
-              <p className="text-[13px] font-semibold text-black tracking-[-0.1px] mb-4">
-                About
-              </p>
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2.5 text-[13px] font-normal text-black/60 tracking-[-0.1px]">
-                  <HiLocationMarker className="text-[15px] shrink-0 text-black/30" />
-                  {user.location}
-                </div>
-                <div className="flex items-center gap-2.5 text-[13px] font-normal text-black/60 tracking-[-0.1px]">
-                  <HiMail className="text-[15px] shrink-0 text-black/30" />
-                  {user.email}
-                </div>
-                <div className="flex items-center gap-2.5 text-[13px] font-normal text-black/60 tracking-[-0.1px]">
-                  <HiCalendar className="text-[15px] shrink-0 text-black/30" />
-                  Joined {user.joined}
-                </div>
-              </div>
-            </div>
-
-            {/* Ideas summary card */}
-            <div className="bg-white border border-black/[0.06] rounded-2xl p-5">
-              <p className="text-[13px] font-semibold text-black tracking-[-0.1px] mb-4">
-                Activity
-              </p>
-              <div className="flex flex-col gap-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] font-normal text-black/50 tracking-[-0.1px]">
-                    Ideas posted
-                  </span>
-                  <span className="text-[13px] font-semibold text-black tracking-[-0.1px]">
-                    {user.totalIdeas}
-                  </span>
-                </div>
-                <div className="h-px bg-black/[0.05]" />
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] font-normal text-black/50 tracking-[-0.1px]">
-                    Total likes received
-                  </span>
-                  <span className="text-[13px] font-semibold text-black tracking-[-0.1px]">
-                    {user.totalLikes}
-                  </span>
-                </div>
-                <div className="h-px bg-black/[0.05]" />
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] font-normal text-black/50 tracking-[-0.1px]">
-                    Total comments
-                  </span>
-                  <span className="text-[13px] font-semibold text-black tracking-[-0.1px]">
-                    {user.totalComments}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT — Posts Feed */}
-          <div className="flex-1 min-w-0 flex flex-col gap-4">
-            <p className="text-[13px] font-normal text-black/40 tracking-[-0.1px]">
-              Ideas
-            </p>
-
+          {/* LEFT — Posts Feed */}
+          <div className="flex-1 min-w-0 flex flex-col gap-4 order-2 lg:order-1">
             {myIdeas.map((idea) => {
               const color = categoryColors[idea.category] || {
                 bg: "bg-gray-50",
@@ -294,8 +212,6 @@ export default function ProfilePage() {
                       <button className="w-8 h-8 flex items-center justify-center rounded-full text-black/40 hover:text-black hover:bg-black/[0.05] transition-all duration-150">
                         <HiDotsHorizontal className="text-[18px]" />
                       </button>
-
-                      {/* Dropdown */}
                       <div className="absolute right-0 top-full mt-1 w-[160px] bg-white/90 backdrop-blur-xl border border-black/[0.08] rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-150 z-10">
                         <button className="w-full text-left px-4 py-2.5 text-[13px] font-normal text-black hover:bg-black/[0.04] tracking-[-0.1px] transition-all duration-150">
                           ✏️ Edit idea
@@ -310,12 +226,12 @@ export default function ProfilePage() {
 
                   {/* Title + Description */}
                   <div className="px-4 pb-3">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <h3 className="text-[14px] font-semibold text-black tracking-[-0.02em] leading-snug">
+                    <div className="flex items-start gap-2 mb-1.5">
+                      <h3 className="text-[14px] font-semibold text-black tracking-[-0.02em] leading-snug flex-1">
                         {idea.title}
                       </h3>
                       <span
-                        className={`text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0 ${color.bg} ${color.text}`}
+                        className={`text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0 mt-0.5 ${color.bg} ${color.text}`}
                       >
                         {idea.category}
                       </span>
@@ -335,7 +251,7 @@ export default function ProfilePage() {
                     />
                   </div>
 
-                  {/* Like + Comment count row */}
+                  {/* Count row */}
                   <div className="flex items-center justify-between px-4 py-2 border-b border-black/[0.05]">
                     <span className="text-[12px] font-normal text-black/40 tracking-[-0.1px]">
                       ♥ {idea.likes} likes
@@ -362,6 +278,71 @@ export default function ProfilePage() {
                 </div>
               );
             })}
+          </div>
+
+          {/* RIGHT — Sticky Sidebar */}
+          <div className="w-full lg:w-[280px] shrink-0 flex flex-col gap-4 order-1 lg:order-2 lg:sticky lg:top-[72px]">
+            {/* About */}
+            <div className="bg-white border border-black/[0.06] rounded-2xl p-5">
+              <p className="text-[13px] font-semibold text-black tracking-[-0.1px] mb-4">
+                About
+              </p>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2.5">
+                  <HiLocationMarker className="text-[15px] shrink-0 text-black/30" />
+                  <span className="text-[13px] font-normal text-black/60 tracking-[-0.1px]">
+                    {user.location}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <HiMail className="text-[15px] shrink-0 text-black/30" />
+                  <span className="text-[13px] font-normal text-black/60 tracking-[-0.1px] truncate">
+                    {user.email}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <HiCalendar className="text-[15px] shrink-0 text-black/30" />
+                  <span className="text-[13px] font-normal text-black/60 tracking-[-0.1px]">
+                    Joined {user.joined}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Activity */}
+            <div className="bg-white border border-black/[0.06] rounded-2xl p-5">
+              <p className="text-[13px] font-semibold text-black tracking-[-0.1px] mb-4">
+                Activity
+              </p>
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] font-normal text-black/50 tracking-[-0.1px]">
+                    Ideas posted
+                  </span>
+                  <span className="text-[13px] font-semibold text-black tracking-[-0.1px]">
+                    {user.totalIdeas}
+                  </span>
+                </div>
+                <div className="h-px bg-black/[0.05]" />
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] font-normal text-black/50 tracking-[-0.1px]">
+                    Total likes
+                  </span>
+                  <span className="text-[13px] font-semibold text-rose-500 tracking-[-0.1px]">
+                    {user.totalLikes}
+                  </span>
+                </div>
+                <div className="h-px bg-black/[0.05]" />
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] font-normal text-black/50 tracking-[-0.1px]">
+                    Total comments
+                  </span>
+                  <span className="text-[13px] font-semibold text-blue-500 tracking-[-0.1px]">
+                    {user.totalComments}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
