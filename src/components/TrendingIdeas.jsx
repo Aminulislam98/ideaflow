@@ -126,7 +126,7 @@ export default function TrendingIdeas() {
           return (
             <div
               key={idea.id}
-              className="flex flex-col bg-white border border-black/[0.08] rounded-2xl overflow-hidden hover:border-black/20 hover:shadow-[0_4px_20px_rgb(0,0,0,0.06)] transition-all duration-200"
+              className="flex flex-col bg-white border border-black/8 rounded-2xl overflow-hidden hover:border-black/20 hover:shadow-[0_4px_20px_rgb(0,0,0,0.06)] transition-all duration-200"
             >
               {/* Card Top — Author */}
               <div className="flex items-center justify-between px-4 pt-4 pb-3">
@@ -137,7 +137,8 @@ export default function TrendingIdeas() {
                       fill
                       src={idea.avatar}
                       alt={idea.author}
-                      className="rounded-full object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="rounded-full object-cover w-9 h-9"
                     />
                   </div>
                   {/* Name + Date */}
@@ -173,7 +174,8 @@ export default function TrendingIdeas() {
                   fill
                   src={idea.banner}
                   alt={idea.title}
-                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover w-full h-44"
                 />
               </div>
 

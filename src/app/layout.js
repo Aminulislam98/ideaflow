@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import GlobalLoader from "@/components/Loader/GlobalLoader";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,8 +29,9 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         {/* this is global loader */}
         <GlobalLoader />
-        <Navbar user={{ name: "aminul", email: "aminurrohman98@gamil.com" }} />
+        <Navbar user={null} />
         <main>{children}</main>
+        <Toaster />
         <Footer />
       </body>
     </html>

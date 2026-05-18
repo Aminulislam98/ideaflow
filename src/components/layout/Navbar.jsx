@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -11,8 +12,11 @@ import {
   HiMenu,
   HiX,
 } from "react-icons/hi";
+import { LogoutModal } from "../buttons/LogoutButton";
 
-export default function Navbar({ user }) {
+export default function Navbar() {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -142,13 +146,14 @@ export default function Navbar({ user }) {
                     </Link>
                   </div>
                   <div className="p-1 border-t border-black/[0.06]">
-                    <button
+                    {/* <button
                       onClick={() => setDropdownOpen(false)}
                       className="w-full flex items-center gap-2 px-3 py-2 text-[13px] font-normal text-red-500 hover:bg-red-50/70 rounded-xl transition-all duration-150 tracking-[-0.1px]"
                     >
                       <HiOutlineLogout className="text-[13px] shrink-0" />
                       Sign Out
-                    </button>
+                    </button> */}
+                    <LogoutModal setDropdownOpen={setDropdownOpen} />
                   </div>
                 </div>
               )}
@@ -156,13 +161,13 @@ export default function Navbar({ user }) {
           ) : (
             <>
               <Link
-                href="/login"
+                href="/signin"
                 className={`text-[13px] font-normal px-3 py-1.5 rounded-lg transition-all duration-150 tracking-[-0.1px] ${textColor} ${hoverBg}`}
               >
                 Sign in
               </Link>
               <Link
-                href="/register"
+                href="/signup"
                 className={`text-[13px] font-normal px-4 py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px] ${
                   isHome && !scrolled
                     ? "text-black bg-white hover:bg-white/90"

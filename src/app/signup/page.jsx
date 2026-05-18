@@ -16,8 +16,40 @@ import {
 } from "react-icons/hi";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const user = Object.fromEntries(formData.entries());
+
+    try {
+      const { data, error } = await authClient.signUp.email({
+        email: user?.email,
+        password: user?.password,
+        name: user?.name, // user display name
+        image: user?.photoURL,
+      });
+      if (error) {
+        toast.error(error.message || "Something went wrong");
+        return;
+      }
+      router.push("/signin");
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      alert("Unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] flex items-center justify-center px-5 py-12">
       <div className="w-full max-w-[400px] flex flex-col gap-4">
@@ -36,7 +68,7 @@ export default function SignInPage() {
 
         {/* Card */}
         <div className="bg-white border border-black/[0.06] rounded-2xl p-6 sm:p-8">
-          <Form className="flex flex-col gap-4">
+          <Form onSubmit={onSubmit} className="flex flex-col gap-4">
             {/* Name */}
             <TextField name="name" isRequired className="w-full">
               <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
@@ -114,7 +146,30 @@ export default function SignInPage() {
               type="submit"
               className="w-full text-[13px] font-normal text-white bg-black hover:bg-black/80 py-2.5 rounded-full transition-all duration-150 tracking-[-0.1px] mt-1"
             >
-              Sign in
+              {loading ? (
+                <svg
+                  className="w-4 h-4 animate-spin"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    opacity="0.25"
+                  />
+                  <path
+                    d="M12 2a10 10 0 0 1 10 10"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              ) : (
+                "Sign up"
+              )}
             </Button>
 
             {/* Divider */}
