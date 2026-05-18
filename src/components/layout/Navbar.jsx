@@ -30,7 +30,7 @@ export default function Navbar({ user }) {
   const links = [
     { name: "Home", href: "/" },
     { name: "Ideas", href: "/ideas" },
-    { name: "Add Idea", href: "/add-ideas" },
+    { name: "Add Idea", href: "/add-idea" },
     { name: "My Ideas", href: "/my-ideas" },
     { name: "My Interactions", href: "/my-instructions" },
   ];
