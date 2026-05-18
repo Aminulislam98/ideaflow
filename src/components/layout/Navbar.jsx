@@ -58,9 +58,9 @@ export default function Navbar({ user }) {
       className={`w-full fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
         isHome
           ? scrolled
-            ? "bg-white/90 backdrop-blur-xl border-black/[0.06]"
+            ? "bg-white border-black/[0.06]"
             : "bg-transparent border-transparent"
-          : "bg-white/90 backdrop-blur-xl border-black/[0.06]"
+          : "bg-white  border-black/[0.06]"
       }`}
     >
       {/* Top Bar */}
