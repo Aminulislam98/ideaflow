@@ -28,6 +28,15 @@ const categories = [
 ];
 
 export default function AddIdeaPage() {
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const form = Object.fromEntries(formData.entries());
+    form.likeCount = [0];
+    form.commentCount = [0];
+    form.createdPostAt = new Date();
+    console.log("Form data is here:", form);
+  };
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] pt-7">
       <div className="max-w-2xl mx-auto px-5 sm:px-8 py-10">
@@ -43,7 +52,7 @@ export default function AddIdeaPage() {
 
         {/* Form Card */}
         <div className="bg-white border border-black/[0.06] rounded-2xl p-6 sm:p-8">
-          <Form className="flex flex-col gap-5">
+          <Form onSubmit={onSubmit} className="flex flex-col gap-5">
             {/* Idea Title */}
             <TextField name="title" isRequired className="w-full">
               <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">

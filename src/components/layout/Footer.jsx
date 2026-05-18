@@ -33,7 +33,6 @@ const socialLinks = [
 
 export default function Footer() {
   const pathName = usePathname();
-  console.log("pathName from footer:", pathName);
   return (
     <footer className="w-full bg-white border-t border-black/6">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
