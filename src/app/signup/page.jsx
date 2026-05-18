@@ -50,6 +50,21 @@ export default function SignInPage() {
       setLoading(false);
     }
   };
+  // socials login:
+  const loginByGoogle = async () => {
+    try {
+      const { data, error } = await authClient.signIn.social({
+        provider: "google",
+      });
+      if (error) {
+        toast.error(error.message || "Google login failed");
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  };
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] flex items-center justify-center px-5 py-12">
       <div className="w-full max-w-[400px] flex flex-col gap-4">
@@ -183,6 +198,7 @@ export default function SignInPage() {
 
             {/* Google */}
             <button
+              onClick={loginByGoogle}
               type="button"
               className="w-full flex items-center justify-center gap-2.5 text-[13px] font-normal text-black border border-black/10 hover:border-black/20 hover:bg-black/[0.03] py-2.5 rounded-full transition-all duration-150 tracking-[-0.1px]"
             >
