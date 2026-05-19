@@ -149,7 +149,7 @@ export default async function IdeasPage() {
   const res = await fetch("http://localhost:4000/ideas");
   const ideas = await res.json();
   return (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen w-full bg-[#f0f2f5]">
       {/* Filter Bar */}
       <div className="sticky top-[52px] z-40 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">

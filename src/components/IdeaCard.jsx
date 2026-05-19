@@ -54,7 +54,7 @@ export default function IdeaCard({ idea }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-col bg-white border border-black/[0.06] rounded-none sm:rounded-2xl overflow-hidden transition-all duration-200 hover:border-black/20">
+    <div className="flex flex-col bg-white border border-black/[0.06] rounded-none sm:rounded-2xl overflow-hidden transition-all duration-200 hover:border-black/20 shadow">
       {/* Author Row */}
       <div className="flex items-center justify-between px-4 pt-4 pb-3">
         <div className="flex items-center gap-2.5">
