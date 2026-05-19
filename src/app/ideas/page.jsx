@@ -1,3 +1,4 @@
+import FilterBar from "@/components/FilterBar";
 import IdeaCard from "@/components/IdeaCard";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -148,68 +149,16 @@ const ideas = [
 ];
 
 export default async function IdeasPage() {
-  // const { token } = await auth.api.getToken({
-  //   headers: await headers(),
-  // });
-  // console.log("this is token form jwt", token);
   const res = await fetch("http://localhost:4000/ideas");
   const ideas = await res.json();
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5]">
       {/* Filter Bar */}
-      <div className="sticky top-[52px] z-40 bg-white border-b border-black/[0.06]">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          {/* Search — half width */}
-          <div className="flex-1 flex items-center gap-2.5 bg-[#f0f2f5] rounded-full px-4 py-2 min-w-0">
-            <HiSearch className="text-black/30 text-[15px] shrink-0" />
-            <input
-              type="text"
-              placeholder="Search ideas..."
-              className="flex-1 bg-transparent text-[13px] font-normal text-black placeholder:text-black/30 tracking-[-0.1px] outline-none min-w-0"
-            />
-          </div>
-
-          {/* Right side — two dropdowns */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Category Dropdown */}
-            <div className="relative flex items-center gap-1.5 bg-[#f0f2f5] hover:bg-black/[0.07] border border-transparent hover:border-black/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
-              <span className="text-[13px] font-normal text-black tracking-[-0.1px] whitespace-nowrap">
-                All Categories
-              </span>
-              <HiChevronDown className="text-black/40 text-[13px] shrink-0" />
-              <select className="absolute inset-0 opacity-0 cursor-pointer w-full">
-                <option>All Categories</option>
-                <option>FinTech</option>
-                <option>EdTech</option>
-                <option>HealthTech</option>
-                <option>GreenTech</option>
-                <option>SaaS</option>
-                <option>AgriTech</option>
-                <option>Tech</option>
-              </select>
-            </div>
-
-            {/* Sort Dropdown */}
-            <div className="relative flex items-center gap-1.5 bg-[#f0f2f5] hover:bg-black/[0.07] border border-transparent hover:border-black/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
-              <span className="text-[13px] font-normal text-black tracking-[-0.1px] whitespace-nowrap">
-                Newest
-              </span>
-              <HiChevronDown className="text-black/40 text-[13px] shrink-0" />
-              <select className="absolute inset-0 opacity-0 cursor-pointer w-full">
-                <option>Newest</option>
-                <option>Oldest</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
+      <FilterBar />
 
       {/* Content */}
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8">
         {/* Section Label */}
-        <p className="text-[13px] font-normal text-black/40 tracking-[-0.1px] mb-6">
-          All Ideas
-        </p>
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

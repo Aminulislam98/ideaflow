@@ -68,7 +68,7 @@ export default async function IdeaDetailsPage({ params }) {
     headers: await headers(),
   });
   console.log("this is idea id from client: ", id);
-  const res = await fetch(`http://localhost:4000/ideas/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${id}`, {
     headers: {
       authorization: `Bearer ${token}`,
     },
