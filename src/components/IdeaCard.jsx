@@ -13,7 +13,7 @@ import {
   HiTrash,
   HiX,
 } from "react-icons/hi";
-import { Button, Modal } from "@heroui/react";
+import { Modal } from "@heroui/react";
 
 const dummyComments = [
   {
@@ -24,7 +24,6 @@ const dummyComments = [
       verified: true,
     },
     text: "This is exactly what the market needs right now. Have you thought about B2B pricing?",
-    createdAt: "2025-05-13T10:00:00.000Z",
     isOwn: false,
   },
   {
@@ -35,7 +34,6 @@ const dummyComments = [
       verified: false,
     },
     text: "Love the concept. Have you looked into Plaid or TrueLayer for bank integrations?",
-    createdAt: "2025-05-14T09:00:00.000Z",
     isOwn: false,
   },
   {
@@ -46,7 +44,6 @@ const dummyComments = [
       verified: true,
     },
     text: "Would love to beta test this. The weekly health report idea is brilliant.",
-    createdAt: "2025-05-15T08:00:00.000Z",
     isOwn: true,
   },
 ];
@@ -133,7 +130,7 @@ export default function IdeaCard({ idea }) {
           <span className="text-[13px] text-black/40">{idea.likeCount}</span>
         </button>
 
-        {/* Comment button — plain button, no Modal wrapper */}
+        {/* Comment */}
         <button
           onClick={() => setModalOpen(true)}
           className="flex-1 flex items-center justify-center gap-1.5 text-black/50 hover:text-green-500 hover:bg-green-50 py-2.5 rounded-xl transition-all duration-150"
@@ -156,22 +153,22 @@ export default function IdeaCard({ idea }) {
         </Link>
       </div>
 
-      {/* Modal — completely outside actions div */}
+      {/* Modal */}
       <Modal isOpen={modalOpen} onOpenChange={setModalOpen}>
         <Modal.Backdrop>
-          <Modal.Container className="!p-0 !m-0 sm:!p-4">
-            <Modal.Dialog className="w-full h-[100dvh] sm:h-auto sm:max-h-[90vh] sm:max-w-[560px] flex flex-col m-0 rounded-none sm:rounded-2xl overflow-hidden shadow-none">
+          <Modal.Container className="p-0! m-0! sm:p-4! py-0!">
+            <Modal.Dialog className="!p-0 w-full h-[100dvh] sm:h-auto sm:max-h-[90vh] sm:max-w-[560px] flex flex-col m-0 rounded-none sm:rounded-2xl overflow-hidden shadow-none">
               {/* Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-black/[0.06] shrink-0">
-                <div className="w-9" />
-                <span className="text-[15px] font-bold text-black tracking-[-0.02em]">
-                  {idea.author?.name}'s Post
-                </span>
+              <div className="flex items-center px-4  justify-between py-3 border-b border-black/[0.06] shrink-0">
                 <Modal.CloseTrigger>
-                  <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#e4e6eb] hover:bg-[#d8dadf] cursor-pointer transition-all duration-150">
+                  <div className="rounded-full bg-[#e4e6eb] hover:bg-[#d8dadf] cursor-pointer transition-all duration-150 ">
                     <HiX className="text-black text-[18px]" />
                   </div>
                 </Modal.CloseTrigger>
+                <span className="text-[15px]  font-bold text-black tracking-[-0.02em]">
+                  {idea.author?.name}'s Post
+                </span>
+                <div className="w-9 mr-3" />
               </div>
 
               {/* Scrollable */}
@@ -218,7 +215,7 @@ export default function IdeaCard({ idea }) {
                   </p>
                 </div>
 
-                {/* Banner — no blur, full image no crop */}
+                {/* Banner — full bleed, no crop */}
                 <div className="w-full">
                   <img
                     src={idea.imageURL}
@@ -239,7 +236,7 @@ export default function IdeaCard({ idea }) {
                   </span>
                 </div>
 
-                {/* Comments — photo, name, badge, text only */}
+                {/* Comments */}
                 <div className="px-3 pt-3 pb-4 flex flex-col gap-3">
                   {dummyComments.map((c) => (
                     <div key={c._id} className="flex items-start gap-2">
@@ -256,7 +253,6 @@ export default function IdeaCard({ idea }) {
                       {/* Bubble */}
                       <div className="flex-1 min-w-0">
                         <div className="relative bg-[#f0f2f5] rounded-2xl px-3 py-2.5">
-                          {/* Name + badge + 3dot for own */}
                           <div className="flex items-center justify-between gap-1 mb-0.5">
                             <div className="flex items-center gap-1 min-w-0">
                               <p className="text-[13px] font-bold text-black leading-none truncate">
@@ -266,7 +262,6 @@ export default function IdeaCard({ idea }) {
                                 <HiBadgeCheck className="text-blue-500 text-[12px] shrink-0" />
                               )}
                             </div>
-
                             {c.isOwn && (
                               <div className="relative shrink-0">
                                 <button
@@ -294,8 +289,6 @@ export default function IdeaCard({ idea }) {
                               </div>
                             )}
                           </div>
-
-                          {/* Comment text only */}
                           <p className="text-[13px] font-normal text-black leading-relaxed">
                             {c.text}
                           </p>
@@ -307,7 +300,7 @@ export default function IdeaCard({ idea }) {
               </div>
 
               {/* Sticky Input */}
-              <div className="border-t border-black/[0.06] px-3 py-2.5 bg-white flex items-center gap-2 shrink-0">
+              <div className="border-t border-black/[0.06] py-2.5 bg-white flex items-center gap-2 shrink-0 px-3">
                 <div className="w-8 h-8 rounded-full relative shrink-0 overflow-hidden">
                   <Image
                     fill
