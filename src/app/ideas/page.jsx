@@ -1,16 +1,18 @@
 import FilterBar from "@/components/FilterBar";
 import IdeaCard from "@/components/IdeaCard";
 
+const getIdeasData = async (search = "", category = "", sort = "") => {
+  const res = await fetch(
+    `http://localhost:4000/ideas?search=${search}&category=${category}&sort=${sort}`,
+  );
+  const data = await res.json();
+  return data;
+};
 
-const getIdeasData = async (search = "", category = "")=> {
-const
-}
+export default async function IdeasPage({ searchParams }) {
+  const sp = await searchParams;
+  const ideas = await getIdeasData(sp.search, sp.category, sp.sort);
 
-
-
-export default async function IdeasPage() {
-  const res = await fetch("http://localhost:4000/ideas");
-  const ideas = await res.json();
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5]">
       {/* Filter Bar */}
