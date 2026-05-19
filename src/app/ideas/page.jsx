@@ -1,4 +1,6 @@
 import IdeaCard from "@/components/IdeaCard";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import {
   HiThumbUp,
   HiChat,
@@ -146,6 +148,10 @@ const ideas = [
 ];
 
 export default async function IdeasPage() {
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
+  console.log("this is token form jwt", token);
   const res = await fetch("http://localhost:4000/ideas");
   const ideas = await res.json();
   return (
