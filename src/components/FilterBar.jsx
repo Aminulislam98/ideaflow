@@ -29,29 +29,43 @@ const FilterBar = () => {
     <div className="pt-13 sticky top-0 z-40">
       <div className="bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          {/* Search */}
+          {/* Search — YouTube style with button */}
           <div className="relative flex-1 min-w-0">
-            <div className="flex items-center gap-2.5 bg-[#f0f2f5] rounded-full px-4 py-2 min-w-0">
-              <HiSearch className="text-black/30 text-[15px] shrink-0" />
-              <input
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setShowSuggestions(e.target.value.length > 0);
-                }}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                onFocus={() => search.length > 0 && setShowSuggestions(true)}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-                type="text"
-                placeholder="Search ideas..."
-                className="flex-1 bg-transparent text-[13px] font-normal text-black placeholder:text-black/30 tracking-[-0.1px] outline-none min-w-0"
-              />
+            <div className="flex items-center min-w-0 shadow-[inset_0_1px_4px_rgb(0,0,0,0.08)] rounded-full border border-black/[0.08]">
+              {/* Input */}
+              <div className="flex items-center gap-2.5 flex-1 bg-white rounded-l-full px-4 py-2 min-w-0">
+                <input
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setShowSuggestions(e.target.value.length > 0);
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  onFocus={() => search.length > 0 && setShowSuggestions(true)}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 150)
+                  }
+                  type="text"
+                  placeholder="Search ideas..."
+                  className="flex-1 bg-transparent text-[13px] font-normal text-black placeholder:text-black/30 tracking-[-0.1px] outline-none min-w-0"
+                />
+              </div>
+
+              {/* Divider */}
+              <div className="w-px h-5 bg-black/[0.1] shrink-0" />
+
+              {/* Search Button */}
+              <button
+                onClick={handleSearch}
+                className="flex items-center justify-center bg-[#f8f8f8] hover:bg-[#f0f0f0] rounded-r-full px-5 py-2 transition-all duration-150 shrink-0"
+              >
+                <HiSearch className="text-black/50 text-[17px]" />
+              </button>
             </div>
 
             {/* Suggestions Dropdown */}
             {showSuggestions && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-white/80 backdrop-blur-2xl border border-black/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] z-50">
-                {/* Label */}
                 <p className="text-[11px] font-medium text-black/30 tracking-[0.5px] uppercase px-4 pt-3 pb-1.5">
                   Suggestions
                 </p>
@@ -89,7 +103,6 @@ const FilterBar = () => {
 
           {/* Right side — two dropdowns */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* Category Dropdown */}
             <div className="relative flex items-center gap-1.5 bg-[#f0f2f5] hover:bg-black/[0.07] border border-transparent hover:border-black/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
               <span className="text-[13px] font-normal text-black tracking-[-0.1px] whitespace-nowrap">
                 All Categories
@@ -107,7 +120,6 @@ const FilterBar = () => {
               </select>
             </div>
 
-            {/* Sort Dropdown */}
             <div className="relative flex items-center gap-1.5 bg-[#f0f2f5] hover:bg-black/[0.07] border border-transparent hover:border-black/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
               <span className="text-[13px] font-normal text-black tracking-[-0.1px] whitespace-nowrap">
                 Newest
