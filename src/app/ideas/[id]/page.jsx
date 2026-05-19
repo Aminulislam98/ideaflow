@@ -1,3 +1,5 @@
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Image from "next/image";
 import {
   HiThumbUp,
@@ -60,7 +62,19 @@ const comments = [
   },
 ];
 
-export default function IdeaDetailsPage() {
+export default async function IdeaDetailsPage({ params }) {
+  const { id } = await params;
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
+  console.log("this is idea id from client: ", id);
+  const res = await fetch(`http://localhost:4000/ideas/${id}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+  const idea = await res.json();
+
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] pt-14">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-6">
@@ -76,7 +90,8 @@ export default function IdeaDetailsPage() {
           />
           {/* Real image */}
           <div className="absolute inset-0 flex items-center justify-center z-10">
-            <img
+            <Image
+              fill
               src={idea.imageURL}
               alt={idea.title}
               className="max-h-full max-w-full object-contain"

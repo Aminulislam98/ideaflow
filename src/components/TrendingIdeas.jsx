@@ -3,6 +3,7 @@ import IdeaCard from "./IdeaCard";
 export default async function TrendingIdeas() {
   const res = await fetch("http://localhost:4000/ideas/trending");
   const ideas = await res.json();
+  console.log(ideas, "this is ideas:");
   return (
     <section className="w-full px-5 sm:px-8 py-16 max-w-6xl mx-auto">
       {/* Section Header */}
