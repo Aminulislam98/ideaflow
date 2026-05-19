@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import {
   Form,
   TextField,
@@ -12,6 +13,8 @@ import {
   Select,
   ListBox,
 } from "@heroui/react";
+import { useRef } from "react";
+import toast from "react-hot-toast";
 
 const categories = [
   "Tech",
@@ -28,15 +31,58 @@ const categories = [
 ];
 
 export default function AddIdeaPage() {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const formRef = useRef(null);
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const form = Object.fromEntries(formData.entries());
-    form.likeCount = [0];
-    form.commentCount = [0];
-    form.createdPostAt = new Date();
-    console.log("Form data is here:", form);
+
+    const ideaData = {
+      title: form.title,
+      shortDescription: form.shortDescription,
+      detailedDescription: form.detailedDescription,
+      problemStatement: form.problemStatement,
+      proposedSolution: form.proposedSolution,
+      category: form.category,
+      targetAudience: form.targetAudience,
+      imageURL: form.imageURL || "",
+      estimatedBudget: form.estimatedBudget || "",
+      tags: form.tags ? form.tags.split(",").map((t) => t.trim()) : [],
+      author: {
+        userId: user?.id,
+        name: user?.name,
+        email: user?.email,
+        photo: user?.image,
+      },
+      likes: [],
+      likeCount: 0,
+      commentCount: 0,
+      createdAt: new Date(),
+    };
+
+    try {
+      const res = await fetch("http://localhost:4000/idea", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(ideaData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("Idea posted successfully!");
+        formRef.current?.reset();
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      toast.error("Failed to post idea. Check your connection.");
+    }
   };
+
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] pt-7">
       <div className="max-w-2xl mx-auto px-5 sm:px-8 py-10">
@@ -52,7 +98,11 @@ export default function AddIdeaPage() {
 
         {/* Form Card */}
         <div className="bg-white border border-black/[0.06] rounded-2xl p-6 sm:p-8">
-          <Form onSubmit={onSubmit} className="flex flex-col gap-5">
+          <Form
+            ref={formRef}
+            onSubmit={onSubmit}
+            className="flex flex-col gap-5"
+          >
             {/* Idea Title */}
             <TextField name="title" isRequired className="w-full">
               <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
@@ -87,7 +137,7 @@ export default function AddIdeaPage() {
               </Label>
               <TextArea
                 placeholder="Describe your idea in detail..."
-                className="w-full "
+                className="w-full min-h-[120px]"
               />
               <FieldError className="text-[11px] text-red-400 mt-1" />
             </TextField>
@@ -99,7 +149,7 @@ export default function AddIdeaPage() {
               </Label>
               <TextArea
                 placeholder="What problem does your idea solve?"
-                className="w-full "
+                className="w-full min-h-[100px]"
               />
               <FieldError className="text-[11px] text-red-400 mt-1" />
             </TextField>
@@ -111,14 +161,13 @@ export default function AddIdeaPage() {
               </Label>
               <TextArea
                 placeholder="How does your idea solve the problem?"
-                className="w-full"
+                className="w-full min-h-[100px]"
               />
               <FieldError className="text-[11px] text-red-400 mt-1" />
             </TextField>
 
             {/* Two columns — Category + Target Audience */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Category */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-[13px] font-medium text-black tracking-[-0.1px]">
                   Category <span className="text-red-400">*</span>
@@ -145,7 +194,6 @@ export default function AddIdeaPage() {
                 </Select>
               </div>
 
-              {/* Target Audience */}
               <TextField name="targetAudience" isRequired className="w-full">
                 <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
                   Target Audience <span className="text-red-400">*</span>
@@ -160,7 +208,6 @@ export default function AddIdeaPage() {
 
             {/* Two columns — Image URL + Estimated Budget */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Image URL */}
               <TextField name="imageURL" className="w-full">
                 <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
                   Image URL
@@ -176,7 +223,6 @@ export default function AddIdeaPage() {
                 <FieldError className="text-[11px] text-red-400 mt-1" />
               </TextField>
 
-              {/* Estimated Budget */}
               <TextField name="estimatedBudget" className="w-full">
                 <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
                   Estimated Budget

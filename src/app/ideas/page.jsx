@@ -1,4 +1,4 @@
-import Image from "next/image";
+import IdeaCard from "@/components/IdeaCard";
 import {
   HiThumbUp,
   HiChat,
@@ -145,17 +145,9 @@ const ideas = [
   },
 ];
 
-const categoryColors = {
-  FinTech: { bg: "bg-blue-50", text: "text-blue-600" },
-  EdTech: { bg: "bg-violet-50", text: "text-violet-600" },
-  HealthTech: { bg: "bg-green-50", text: "text-green-600" },
-  GreenTech: { bg: "bg-emerald-50", text: "text-emerald-600" },
-  SaaS: { bg: "bg-orange-50", text: "text-orange-600" },
-  AgriTech: { bg: "bg-lime-50", text: "text-lime-600" },
-  Tech: { bg: "bg-sky-50", text: "text-sky-600" },
-};
-
-export default function IdeasPage() {
+export default async function IdeasPage() {
+  const res = await fetch("http://localhost:4000/ideas");
+  const ideas = await res.json();
   return (
     <div className="min-h-screen w-full">
       {/* Filter Bar */}
@@ -216,92 +208,7 @@ export default function IdeasPage() {
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {ideas.map((idea) => {
-            const color = categoryColors[idea.category] || {
-              bg: "bg-gray-50",
-              text: "text-gray-600",
-            };
-            return (
-              <div
-                key={idea.id}
-                className="flex flex-col bg-white border border-black/[0.06] rounded-2xl overflow-hidden hover:shadow-[0_4px_20px_rgb(0,0,0,0.08)] transition-all duration-200"
-              >
-                {/* Author Row */}
-                <div className="flex items-center justify-between px-4 pt-4 pb-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full relative shrink-0">
-                      <Image
-                        fill
-                        src={idea.avatar}
-                        alt={idea.author}
-                        className="rounded-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1">
-                        <p className="text-[13px] font-semibold text-black tracking-[-0.1px] leading-none">
-                          {idea.author}
-                        </p>
-                        {idea.verified && (
-                          <HiBadgeCheck className="text-blue-500 text-[14px] shrink-0" />
-                        )}
-                      </div>
-                      <p className="text-[11px] font-normal text-black/30 tracking-[-0.1px] mt-0.5">
-                        {idea.displayDate}
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className={`text-[11px] font-medium tracking-[-0.1px] px-2.5 py-1 rounded-full shrink-0 ${color.bg} ${color.text}`}
-                  >
-                    {idea.category}
-                  </span>
-                </div>
-
-                {/* Title + Description */}
-                <div className="px-4 pb-3">
-                  <h3 className="text-[14px] font-semibold text-black tracking-[-0.02em] leading-snug mb-1.5">
-                    {idea.title}
-                  </h3>
-                  <p className="text-[12.5px] font-normal text-black/50 tracking-[-0.1px] leading-relaxed line-clamp-2">
-                    {idea.description}
-                  </p>
-                </div>
-
-                {/* Banner */}
-                <div className="relative w-full h-44 shrink-0">
-                  <Image
-                    fill
-                    src={idea.banner}
-                    alt={idea.title}
-                    className="object-cover"
-                  />
-                </div>
-
-                {/* Divider */}
-                <div className="h-px bg-black/[0.06] mx-4 mt-3" />
-
-                {/* Actions */}
-                <div className="flex items-center px-2 py-1 gap-1">
-                  <button className="flex-1 flex items-center justify-center gap-1.5 text-[13px] font-normal text-black/50 hover:text-blue-500 hover:bg-blue-50 py-2 rounded-xl transition-all duration-150 tracking-[-0.1px]">
-                    <HiThumbUp className="text-[16px]" />
-                    <span>Like</span>
-                    <span className="text-[12px] text-black/30">
-                      {idea.likes}
-                    </span>
-                  </button>
-                  <button className="flex-1 flex items-center justify-center gap-1.5 text-[13px] font-normal text-black/50 hover:text-green-500 hover:bg-green-50 py-2 rounded-xl transition-all duration-150 tracking-[-0.1px]">
-                    <HiChat className="text-[16px]" />
-                    <span>Comment</span>
-                    <span className="text-[12px] text-black/30">
-                      {idea.comments}
-                    </span>
-                  </button>
-                  <button className="flex-1 flex items-center justify-center gap-1.5 text-[13px] font-normal text-black/50 hover:text-black hover:bg-black/[0.04] py-2 rounded-xl transition-all duration-150 tracking-[-0.1px]">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            );
+            return <IdeaCard key={idea?._id} idea={idea} />;
           })}
         </div>
       </div>
