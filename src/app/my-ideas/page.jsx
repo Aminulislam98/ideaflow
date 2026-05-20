@@ -24,6 +24,7 @@ export default async function MyIdeasPage() {
     `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/user/${userId}`,
   );
   const myIdeas = await res.json();
+  console.log("this is my ideas page:", myIdeas);
 
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] pt-16">
@@ -148,10 +149,13 @@ export default async function MyIdeasPage() {
 
                   {/* Actions */}
                   <div className="flex items-center gap-2">
-                    <button className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-black/60 hover:text-black border border-black/10 hover:border-black/20 hover:bg-black/[0.03] py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]">
+                    <Link
+                      href={`/my-ideas/${idea._id}`}
+                      className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-black/60 hover:text-black border border-black/10 hover:border-black/20 hover:bg-black/[0.03] py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]"
+                    >
                       <HiPencil className="text-[13px]" />
                       Edit
-                    </button>
+                    </Link>
                     <button className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-red-400 hover:text-red-500 border border-red-100 hover:border-red-200 hover:bg-red-50 py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]">
                       <HiTrash className="text-[13px]" />
                       Delete
