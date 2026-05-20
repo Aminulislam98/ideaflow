@@ -19,7 +19,7 @@ export default async function IdeasPage({ searchParams }) {
       <FilterBar />
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4">
         {/* Section Label */}
 
         {/* Grid */}

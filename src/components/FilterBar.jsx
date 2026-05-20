@@ -1,7 +1,8 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiChevronDown, HiSearch } from "react-icons/hi";
+import { useDebounce } from "use-debounce";
 
 const demoSuggestions = [
   { _id: "1", title: "AI-Powered Personal Finance Assistant" },
@@ -16,10 +17,33 @@ const FilterBar = () => {
   const router = useRouter();
   const pathName = usePathname();
   const [search, setSearch] = useState("");
-
+  const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [debouncedSearch] = useDebounce(search, 300);
 
+  useEffect(() => {
+    if (!debouncedSearch) {
+      setSuggestions([]);
+      return;
+    }
+    const fetchSuggestions = async () => {
+      const res = await fetch(
+        `http://localhost:4000/ideas/suggestions?search=${debouncedSearch}`,
+      );
+      const data = await res.json();
+      setSuggestions(data);
+      setShowSuggestions(true);
+    };
+
+    fetchSuggestions();
+  }, [debouncedSearch]);
+
+  const [selectedCategory, setSelectedCategory] = useState("All Categories");
+  const [sortType, setSortType] = useState("Newest");
+
+  //   handling search
   const handleSearch = () => {
+    setShowSuggestions(false);
     const params = new URLSearchParams(searchParams);
     if (search) {
       params.set("search", search);
@@ -28,9 +52,7 @@ const FilterBar = () => {
     }
     router.push(`${pathName}?${params.toString()}`);
   };
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
-  const [sortType, setSortType] = useState("Newest");
-
+  //   handling category
   const handleCategory = (category) => {
     setSelectedCategory(category);
     const params = new URLSearchParams(searchParams);
@@ -41,7 +63,7 @@ const FilterBar = () => {
     }
     router.push(`${pathName}?${params.toString()}`);
   };
-
+  //   handling sorting
   const handleSort = (sort) => {
     console.log("this is sort from client:", sort);
     setSortType(sort);
@@ -69,7 +91,7 @@ const FilterBar = () => {
                     setSearch(e.target.value);
                     setShowSuggestions(e.target.value.length > 0);
                   }}
-                  //   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   onFocus={() => search.length > 0 && setShowSuggestions(true)}
                   onBlur={() =>
                     setTimeout(() => setShowSuggestions(false), 150)
@@ -99,7 +121,7 @@ const FilterBar = () => {
                   Suggestions
                 </p>
 
-                {demoSuggestions.map((s) => (
+                {suggestions.map((s) => (
                   <button
                     key={s._id}
                     onMouseDown={() => {
