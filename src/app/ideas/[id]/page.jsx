@@ -13,6 +13,25 @@ import NewCommentOnPost from "@/components/comment/Comment";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+export async function generateMetadata({ params }) {
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
+  const { id } = await params;
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${id}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+  const idea = await res.json();
+
+  return {
+    title: idea?.title,
+    description: idea.shortDescription,
+  };
+}
+
 // ─── MAIN PAGE
 export default async function IdeaDetailsPage({ params }) {
   const { id } = await params;
