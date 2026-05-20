@@ -70,8 +70,6 @@ export default function AddIdeaPage() {
         body: JSON.stringify(ideaData),
       });
 
-      const data = await res.json();
-
       if (res.ok) {
         toast.success("Idea posted successfully!");
         formRef.current?.reset();

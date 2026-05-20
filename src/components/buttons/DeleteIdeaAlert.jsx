@@ -3,14 +3,32 @@
 import { useState } from "react";
 import { Modal } from "@heroui/react";
 import { HiTrash, HiExclamation } from "react-icons/hi";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export function DeleteIdeaAlert({ idea }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleDelete = async () => {
     setLoading(true);
-    await onDelete();
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${idea._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    );
+    if (res.ok) {
+      toast.success("Idea deleted!");
+      router.refresh();
+    }
+
     setLoading(false);
     setOpen(false);
   };

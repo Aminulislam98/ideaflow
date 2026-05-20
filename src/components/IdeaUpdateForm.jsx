@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import {
   Form,
   TextField,
@@ -27,7 +27,7 @@ const categories = [
   "Other",
 ];
 const IdeaUpdateForm = ({ idea }) => {
-  console.log(idea);
+  const formRef = useRef(null);
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -44,6 +44,7 @@ const IdeaUpdateForm = ({ idea }) => {
       );
       if (res.ok) {
         toast.success("Idea updated successfully!");
+        formRef.current?.reset();
       } else {
         toast.error("Something went wrong. Please try again.");
       }
@@ -53,7 +54,7 @@ const IdeaUpdateForm = ({ idea }) => {
   };
   return (
     <div>
-      <Form onSubmit={onSubmit} className="flex flex-col gap-5">
+      <Form ref={formRef} onSubmit={onSubmit} className="flex flex-col gap-5">
         {/* Idea Title */}
         <TextField
           name="title"
