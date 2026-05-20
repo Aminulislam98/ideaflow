@@ -27,6 +27,7 @@ const categories = [
   "Other",
 ];
 const IdeaUpdateForm = ({ idea }) => {
+  console.log(idea);
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -225,11 +226,7 @@ const IdeaUpdateForm = ({ idea }) => {
         </div>
 
         {/* Tags */}
-        <TextField
-          name="tags"
-          className="w-full"
-          defaultValue={idea?.tags?.join(", ")}
-        >
+        <TextField name="tags" className="w-full" defaultValue={idea.tags}>
           <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
             Tags
           </Label>

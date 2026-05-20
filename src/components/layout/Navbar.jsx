@@ -137,7 +137,7 @@ export default function Navbar() {
                       Profile
                     </Link>
                     <Link
-                      href="/settings"
+                      href="/updateProfile"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 text-[13px] font-normal text-black hover:bg-black/[0.04] rounded-xl transition-all duration-150 tracking-[-0.1px]"
                     >

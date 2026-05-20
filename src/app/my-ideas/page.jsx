@@ -1,3 +1,4 @@
+import { DeleteIdeaAlert } from "@/components/buttons/DeleteIdeaAlert";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Image from "next/image";
@@ -156,10 +157,11 @@ export default async function MyIdeasPage() {
                       <HiPencil className="text-[13px]" />
                       Edit
                     </Link>
-                    <button className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-red-400 hover:text-red-500 border border-red-100 hover:border-red-200 hover:bg-red-50 py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]">
+                    {/* <button className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-red-400 hover:text-red-500 border border-red-100 hover:border-red-200 hover:bg-red-50 py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]">
                       <HiTrash className="text-[13px]" />
                       Delete
-                    </button>
+                    </button> */}
+                    <DeleteIdeaAlert idea={idea}></DeleteIdeaAlert>
                     <Link
                       href={`/ideas/${idea._id}`}
                       className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-black/60 hover:text-black border border-black/10 hover:border-black/20 hover:bg-black/[0.03] py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]"
