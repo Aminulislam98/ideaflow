@@ -1,87 +1,9 @@
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Image from "next/image";
+import Link from "next/link";
 import { HiPencil, HiTrash, HiBadgeCheck } from "react-icons/hi";
-
-const myIdeas = [
-  {
-    id: 1,
-    title: "AI-Powered Personal Finance Assistant",
-    category: "FinTech",
-    banner:
-      "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&auto=format&fit=crop&q=60",
-    description:
-      "An intelligent assistant that tracks your spending habits and gives personalized saving tips based on your lifestyle.",
-    displayDate: "May 12, 2025",
-    likes: 142,
-    comments: 38,
-    status: "Published",
-  },
-  {
-    id: 2,
-    title: "Community-Based Learning Platform",
-    category: "EdTech",
-    banner:
-      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop&q=60",
-    description:
-      "A peer-to-peer learning platform where students teach each other skills and earn credentials verified on blockchain.",
-    displayDate: "May 10, 2025",
-    likes: 98,
-    comments: 21,
-    status: "Published",
-  },
-  {
-    id: 3,
-    title: "Mental Health Check-In App",
-    category: "HealthTech",
-    banner:
-      "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&auto=format&fit=crop&q=60",
-    description:
-      "A daily mood tracking app that connects users with therapists and provides guided meditation based on emotional state.",
-    displayDate: "May 9, 2025",
-    likes: 210,
-    comments: 54,
-    status: "Draft",
-  },
-  {
-    id: 4,
-    title: "Hyperlocal Food Waste Marketplace",
-    category: "GreenTech",
-    banner:
-      "https://images.unsplash.com/photo-1542601906897-b47b5fe2b67a?w=600&auto=format&fit=crop&q=60",
-    description:
-      "Connects restaurants with surplus food to nearby shelters and individuals at reduced prices to cut food waste.",
-    displayDate: "May 8, 2025",
-    likes: 76,
-    comments: 17,
-    status: "Published",
-  },
-  {
-    id: 5,
-    title: "Remote Team Culture Builder",
-    category: "SaaS",
-    banner:
-      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&auto=format&fit=crop&q=60",
-    description:
-      "A platform that helps remote companies build culture through async standups, virtual events, and team challenges.",
-    displayDate: "May 7, 2025",
-    likes: 55,
-    comments: 12,
-    status: "Draft",
-  },
-  {
-    id: 6,
-    title: "Smart Urban Farming Kit",
-    category: "AgriTech",
-    banner:
-      "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop&q=60",
-    description:
-      "An IoT-powered home farming kit that lets city dwellers grow vegetables with automated watering and light control.",
-    displayDate: "May 6, 2025",
-    likes: 189,
-    comments: 43,
-    status: "Published",
-  },
-];
-
+import { HiLightBulb } from "react-icons/hi";
 const categoryColors = {
   FinTech: { bg: "bg-blue-50", text: "text-blue-600" },
   EdTech: { bg: "bg-violet-50", text: "text-violet-600" },
@@ -91,16 +13,20 @@ const categoryColors = {
   AgriTech: { bg: "bg-lime-50", text: "text-lime-600" },
 };
 
-const user = {
-  name: "Aminul Islam",
-  email: "aminul@aminulislam.co.uk",
-  avatar: "https://i.pravatar.cc/150?img=33",
-  verified: true,
-};
+export default async function MyIdeasPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user = session?.user;
+  const userId = session?.user.id;
 
-export default function MyIdeasPage() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/user/${userId}`,
+  );
+  const myIdeas = await res.json();
+
   return (
-    <div className="min-h-screen w-full bg-[#f0f2f5]  pt-16">
+    <div className="min-h-screen w-full bg-[#f0f2f5] pt-16">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-6">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -108,17 +34,18 @@ export default function MyIdeasPage() {
             <div className="w-10 h-10 rounded-full relative shrink-0">
               <Image
                 fill
-                src={user.avatar}
-                alt={user.name}
+                src={user?.image}
+                alt={user?.name}
+                sizes="40px"
                 className="rounded-full object-cover"
               />
             </div>
             <div>
               <div className="flex items-center gap-1">
                 <h1 className="text-[15px] font-semibold text-black tracking-[-0.02em]">
-                  {user.name}
+                  {user?.name}
                 </h1>
-                {user.verified && (
+                {user?.verified && (
                   <HiBadgeCheck className="text-blue-500 text-[15px] shrink-0" />
                 )}
               </div>
@@ -132,7 +59,7 @@ export default function MyIdeasPage() {
           <div className="flex items-center gap-3">
             <div className="bg-white border border-black/[0.06] rounded-xl px-4 py-2.5 text-center">
               <p className="text-[18px] font-semibold text-black tracking-[-0.03em]">
-                {myIdeas.reduce((a, b) => a + b.likes, 0)}
+                {myIdeas.reduce((a, b) => a + (b.likeCount || 0), 0)}
               </p>
               <p className="text-[11px] font-normal text-black/30 tracking-[-0.1px]">
                 Total likes
@@ -140,7 +67,7 @@ export default function MyIdeasPage() {
             </div>
             <div className="bg-white border border-black/[0.06] rounded-xl px-4 py-2.5 text-center">
               <p className="text-[18px] font-semibold text-black tracking-[-0.03em]">
-                {myIdeas.reduce((a, b) => a + b.comments, 0)}
+                {myIdeas.reduce((a, b) => a + (b.commentCount || 0), 0)}
               </p>
               <p className="text-[11px] font-normal text-black/30 tracking-[-0.1px]">
                 Total comments
@@ -171,27 +98,18 @@ export default function MyIdeasPage() {
             };
             return (
               <div
-                key={idea.id}
+                key={idea._id}
                 className="flex flex-col bg-white border border-black/[0.06] rounded-2xl overflow-hidden hover:shadow-[0_4px_20px_rgb(0,0,0,0.08)] transition-all duration-200"
               >
                 {/* Banner */}
                 <div className="relative w-full h-40 shrink-0">
                   <Image
                     fill
-                    src={idea.banner}
+                    src={idea.imageURL}
                     alt={idea.title}
+                    sizes="400px"
                     className="object-cover"
                   />
-                  {/* Status badge */}
-                  <span
-                    className={`absolute top-3 right-3 text-[10px] font-medium tracking-[-0.1px] px-2 py-0.5 rounded-full ${
-                      idea.status === "Published"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-amber-100 text-amber-600"
-                    }`}
-                  >
-                    {idea.status}
-                  </span>
                   {/* Category badge */}
                   <span
                     className={`absolute top-3 left-3 text-[10px] font-medium tracking-[-0.1px] px-2 py-0.5 rounded-full ${color.bg} ${color.text}`}
@@ -206,19 +124,22 @@ export default function MyIdeasPage() {
                     {idea.title}
                   </h3>
                   <p className="text-[12.5px] font-normal text-black/50 tracking-[-0.1px] leading-relaxed line-clamp-2 flex-1">
-                    {idea.description}
+                    {idea.shortDescription}
                   </p>
 
                   {/* Stats row */}
                   <div className="flex items-center gap-3 mt-3 mb-3">
                     <span className="text-[12px] font-normal text-rose-400 bg-rose-50 px-2 py-0.5 rounded-full">
-                      ♥ {idea.likes}
+                      ♥ {idea.likeCount}
                     </span>
                     <span className="text-[12px] font-normal text-blue-400 bg-blue-50 px-2 py-0.5 rounded-full">
-                      💬 {idea.comments}
+                      💬 {idea.commentCount}
                     </span>
                     <span className="text-[11px] font-normal text-black/30 tracking-[-0.1px] ml-auto">
-                      {idea.displayDate}
+                      {new Date(idea.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
                     </span>
                   </div>
 
@@ -235,9 +156,12 @@ export default function MyIdeasPage() {
                       <HiTrash className="text-[13px]" />
                       Delete
                     </button>
-                    <button className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-black/60 hover:text-black border border-black/10 hover:border-black/20 hover:bg-black/[0.03] py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]">
+                    <Link
+                      href={`/ideas/${idea._id}`}
+                      className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-black/60 hover:text-black border border-black/10 hover:border-black/20 hover:bg-black/[0.03] py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]"
+                    >
                       View
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -247,20 +171,25 @@ export default function MyIdeasPage() {
 
         {/* Empty state */}
         {myIdeas.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <p className="text-[32px]">💡</p>
-            <p className="text-[15px] font-semibold text-black tracking-[-0.02em]">
-              No ideas yet
-            </p>
-            <p className="text-[13px] font-normal text-black/40 tracking-[-0.1px]">
-              Share your first idea with the world
-            </p>
-            <a
-              href="/add-ideas"
-              className="mt-2 text-[13px] font-normal text-white bg-black hover:bg-black/80 px-5 py-2 rounded-full transition-all duration-150 tracking-[-0.1px]"
+          <div className="flex flex-col items-center justify-center py-24 gap-3">
+            <div className="w-20 h-20 rounded-full bg-[#f0f2f5] flex items-center justify-center">
+              <HiLightBulb className="text-[36px] text-black/20" />
+            </div>
+            <div className="flex flex-col items-center gap-1 text-center">
+              <p className="text-[15px] font-bold text-black tracking-[-0.02em]">
+                No ideas yet
+              </p>
+              <p className="text-[13px] font-normal text-black/40 tracking-[-0.1px] max-w-[220px] leading-relaxed">
+                You haven't shared any ideas yet. Your first one could change
+                everything.
+              </p>
+            </div>
+            <Link
+              href="/add-idea"
+              className="mt-1 text-[13px] font-medium text-white bg-black hover:bg-black/80 px-5 py-2.5 rounded-full transition-all duration-150 tracking-[-0.1px]"
             >
-              Add Idea
-            </a>
+              Share your first idea
+            </Link>
           </div>
         )}
       </div>
