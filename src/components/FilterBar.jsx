@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiChevronDown, HiSearch } from "react-icons/hi";
@@ -42,7 +43,7 @@ const FilterBar = () => {
   const [sortType, setSortType] = useState("Newest");
 
   //   handling search
-  const handleSearch = () => {
+  const handleSearch = (query = search) => {
     setShowSuggestions(false);
     const params = new URLSearchParams(searchParams);
     if (search) {
@@ -116,7 +117,7 @@ const FilterBar = () => {
 
             {/* Suggestions Dropdown */}
             {showSuggestions && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white/80 backdrop-blur-2xl border border-black/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] z-50">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white/80 backdrop-blur-2xl border border-black/8 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] z-50">
                 <p className="text-[11px] font-medium text-black/30 tracking-[0.5px] uppercase px-4 pt-3 pb-1.5">
                   Suggestions
                 </p>
@@ -125,13 +126,24 @@ const FilterBar = () => {
                   <button
                     key={s._id}
                     onMouseDown={() => {
-                      setSearch(s.title);
+                      handleSearch(s.title);
                       setShowSuggestions(false);
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-black/[0.04] transition-all duration-150 text-left"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-black/4 transition-all duration-150 text-left cursor-pointer"
                   >
-                    <HiSearch className="text-black/20 text-[13px] shrink-0" />
-                    <span className="text-[13px] font-normal text-black tracking-[-0.1px]">
+                    {s.imageURL ? (
+                      <div className="relative w-8 h-8 shrink-0">
+                        <Image
+                          fill
+                          src={s.imageURL}
+                          alt={s.title}
+                          className="rounded-lg object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <HiSearch className="text-black/20 text-[13px] shrink-0" />
+                    )}
+                    <span className="text-[13px] font-normal text-black tracking-[-0.1px] underline ">
                       {s.title}
                     </span>
                   </button>
