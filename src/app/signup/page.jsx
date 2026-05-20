@@ -19,9 +19,11 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -42,7 +44,7 @@ export default function SignInPage() {
         toast.error(error.message || "Something went wrong");
         return;
       }
-      router.push("/signin");
+      router.push(`${callbackUrl}`);
     } catch (err) {
       console.error("Unexpected error:", err);
       alert("Unexpected error occurred");
@@ -55,6 +57,7 @@ export default function SignInPage() {
     try {
       const { data, error } = await authClient.signIn.social({
         provider: "google",
+        callbackURL: `${callbackUrl}`,
       });
       if (error) {
         toast.error(error.message || "Google login failed");
@@ -212,7 +215,7 @@ export default function SignInPage() {
         <p className="text-center text-[13px] font-normal text-black/40 tracking-[-0.1px]">
           Already have an account?{" "}
           <Link
-            href="/register"
+            href={`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`}
             className="text-black font-medium hover:underline"
           >
             Sign in
