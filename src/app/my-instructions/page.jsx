@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { HiThumbUp, HiChat, HiBadgeCheck } from "react-icons/hi";
 
 const interactions = [
@@ -120,25 +121,25 @@ const totalComments = interactions.filter((i) => i.type === "comment").length;
 
 export default function MyInteractionsPage() {
   return (
-    <div className="min-h-screen w-full bg-[#f0f2f5] pt-16">
+    <div className="min-h-screen w-full bg-[#f0f2f5] dark:bg-zinc-950 pt-16">
       <div className="max-w-3xl mx-auto px-5 sm:px-8 py-6 flex flex-col gap-5">
         {/* Page Header */}
-        <div className="bg-white border border-black/[0.06] rounded-2xl p-5">
+        <div className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-[17px] font-semibold text-black tracking-[-0.03em]">
+              <h1 className="text-[17px] font-semibold text-black dark:text-white tracking-[-0.03em]">
                 My Interactions
               </h1>
-              <p className="text-[12px] font-normal text-black/40 tracking-[-0.1px] mt-0.5">
+              <p className="text-[12px] font-normal text-black/40 dark:text-white/40 tracking-[-0.1px] mt-0.5">
                 Ideas you've liked and commented on
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <div className="flex items-center gap-1.5 text-[12px] font-normal text-rose-500 bg-rose-50 px-3 py-1.5 rounded-full tracking-[-0.1px]">
+              <div className="flex items-center gap-1.5 text-[12px] font-normal text-rose-500 bg-rose-50 dark:bg-rose-500/10 px-3 py-1.5 rounded-full tracking-[-0.1px]">
                 <HiThumbUp className="text-[13px]" />
                 {totalLikes} likes
               </div>
-              <div className="flex items-center gap-1.5 text-[12px] font-normal text-blue-500 bg-blue-50 px-3 py-1.5 rounded-full tracking-[-0.1px]">
+              <div className="flex items-center gap-1.5 text-[12px] font-normal text-blue-500 bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-full tracking-[-0.1px]">
                 <HiChat className="text-[13px]" />
                 {totalComments} comments
               </div>
@@ -147,7 +148,7 @@ export default function MyInteractionsPage() {
         </div>
 
         {/* Section Label */}
-        <p className="text-[13px] font-normal text-black/40 tracking-[-0.1px] -mb-2">
+        <p className="text-[13px] font-normal text-black/40 dark:text-white/40 tracking-[-0.1px] -mb-2">
           All Interactions
         </p>
 
@@ -160,12 +161,14 @@ export default function MyInteractionsPage() {
           return (
             <div
               key={item.id}
-              className="bg-white border border-black/[0.06] rounded-2xl overflow-hidden hover:shadow-[0_4px_20px_rgb(0,0,0,0.06)] transition-all duration-200"
+              className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden hover:shadow-[0_4px_20px_rgb(0,0,0,0.06)] dark:hover:shadow-[0_4px_20px_rgb(0,0,0,0.3)] transition-all duration-200"
             >
               {/* Interaction type label */}
               <div
-                className={`flex items-center gap-2 px-4 py-2.5 border-b border-black/[0.04] ${
-                  item.type === "like" ? "bg-rose-50/60" : "bg-blue-50/60"
+                className={`flex items-center gap-2 px-4 py-2.5 border-b border-black/[0.04] dark:border-white/[0.04] ${
+                  item.type === "like"
+                    ? "bg-rose-50/60 dark:bg-rose-500/10"
+                    : "bg-blue-50/60 dark:bg-blue-500/10"
                 }`}
               >
                 {item.type === "like" ? (
@@ -196,15 +199,13 @@ export default function MyInteractionsPage() {
                       className="rounded-full object-cover"
                     />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-1">
-                      <p className="text-[13px] font-semibold text-black tracking-[-0.1px] leading-none">
-                        {item.idea.author}
-                      </p>
-                      {item.idea.verified && (
-                        <HiBadgeCheck className="text-blue-500 text-[13px] shrink-0" />
-                      )}
-                    </div>
+                  <div className="flex items-center gap-1">
+                    <p className="text-[13px] font-semibold text-black dark:text-white tracking-[-0.1px] leading-none">
+                      {item.idea.author}
+                    </p>
+                    {item.idea.verified && (
+                      <HiBadgeCheck className="text-blue-500 text-[13px] shrink-0" />
+                    )}
                   </div>
                 </div>
                 <span
@@ -216,7 +217,7 @@ export default function MyInteractionsPage() {
 
               {/* Idea title */}
               <div className="px-4 pb-2">
-                <h3 className="text-[14px] font-semibold text-black tracking-[-0.02em] leading-snug">
+                <h3 className="text-[14px] font-semibold text-black dark:text-white tracking-[-0.02em] leading-snug">
                   {item.idea.title}
                 </h3>
               </div>
@@ -231,29 +232,29 @@ export default function MyInteractionsPage() {
                 />
               </div>
 
-              {/* My comment — only for comment type */}
+              {/* My comment */}
               {item.type === "comment" && (
-                <div className="mx-4 my-3 bg-[#f0f2f5] rounded-xl px-4 py-3">
-                  <p className="text-[11px] font-medium text-black/30 tracking-[-0.1px] mb-1">
+                <div className="mx-4 my-3 bg-[#f0f2f5] dark:bg-zinc-800 rounded-xl px-4 py-3">
+                  <p className="text-[11px] font-medium text-black/30 dark:text-white/30 tracking-[-0.1px] mb-1">
                     Your comment
                   </p>
-                  <p className="text-[13px] font-normal text-black/70 tracking-[-0.1px] leading-relaxed">
+                  <p className="text-[13px] font-normal text-black/70 dark:text-white/70 tracking-[-0.1px] leading-relaxed">
                     {item.myComment}
                   </p>
                 </div>
               )}
 
               {/* Stats + action */}
-              <div className="flex items-center justify-between px-4 py-2.5 border-t border-black/[0.04]">
+              <div className="flex items-center justify-between px-4 py-2.5 border-t border-black/[0.04] dark:border-white/[0.04]">
                 <div className="flex items-center gap-3">
-                  <span className="text-[12px] font-normal text-black/30 tracking-[-0.1px]">
+                  <span className="text-[12px] font-normal text-black/30 dark:text-white/30 tracking-[-0.1px]">
                     ♥ {item.idea.likes}
                   </span>
-                  <span className="text-[12px] font-normal text-black/30 tracking-[-0.1px]">
+                  <span className="text-[12px] font-normal text-black/30 dark:text-white/30 tracking-[-0.1px]">
                     💬 {item.idea.comments}
                   </span>
                 </div>
-                <button className="text-[12px] font-normal text-black/50 hover:text-black border border-black/10 hover:border-black/20 hover:bg-black/[0.03] px-4 py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]">
+                <button className="text-[12px] font-normal text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] px-4 py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]">
                   View Idea
                 </button>
               </div>
@@ -265,18 +266,18 @@ export default function MyInteractionsPage() {
         {interactions.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
             <p className="text-[32px]">💬</p>
-            <p className="text-[15px] font-semibold text-black tracking-[-0.02em]">
+            <p className="text-[15px] font-semibold text-black dark:text-white tracking-[-0.02em]">
               No interactions yet
             </p>
-            <p className="text-[13px] font-normal text-black/40 tracking-[-0.1px]">
+            <p className="text-[13px] font-normal text-black/40 dark:text-white/40 tracking-[-0.1px]">
               Like or comment on ideas to see them here
             </p>
-            <a
+            <Link
               href="/ideas"
-              className="mt-2 text-[13px] font-normal text-white bg-black hover:bg-black/80 px-5 py-2 rounded-full transition-all duration-150 tracking-[-0.1px]"
+              className="mt-2 text-[13px] font-normal text-white dark:text-black bg-black dark:bg-white hover:bg-black/80 dark:hover:bg-white/90 px-5 py-2 rounded-full transition-all duration-150 tracking-[-0.1px]"
             >
               Explore Ideas
-            </a>
+            </Link>
           </div>
         )}
       </div>

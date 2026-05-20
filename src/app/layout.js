@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import GlobalLoader from "@/components/Loader/GlobalLoader";
 import { Toaster } from "react-hot-toast";
+import { Providers } from "@/components/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -58,13 +59,19 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${geistMono.variable}`}
+    >
       <body className="min-h-full flex flex-col font-sans antialiased">
-        <GlobalLoader />
-        <Navbar user={null} />
-        <main>{children}</main>
-        <Toaster />
-        <Footer />
+        <Providers>
+          <GlobalLoader />
+          <Navbar user={null} />
+          <main>{children}</main>
+          <Toaster />
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

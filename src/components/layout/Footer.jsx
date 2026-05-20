@@ -33,8 +33,9 @@ const socialLinks = [
 
 export default function Footer() {
   const pathName = usePathname();
+
   return (
-    <footer className="w-full bg-white border-t border-black/6">
+    <footer className="w-full bg-white dark:bg-zinc-900 border-t border-black/[0.06] dark:border-white/[0.06]">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-14">
@@ -42,11 +43,11 @@ export default function Footer() {
           <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
-              className="text-[15px] font-semibold tracking-[-0.3px] text-black w-fit"
+              className="text-[15px] font-semibold tracking-[-0.3px] text-black dark:text-white w-fit"
             >
               IdeaFlow
             </Link>
-            <p className="text-[13px] font-normal text-black/50 leading-relaxed tracking-[-0.1px] max-w-[220px]">
+            <p className="text-[13px] font-normal text-black/50 dark:text-white/50 leading-relaxed tracking-[-0.1px] max-w-[220px]">
               A place to share, discover, and grow ideas together.
             </p>
 
@@ -59,7 +60,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg text-black hover:bg-black/4 transition-all duration-150"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all duration-150"
                 >
                   <Icon className="text-[14px]" />
                 </Link>
@@ -69,14 +70,16 @@ export default function Footer() {
 
           {/* Platform Links */}
           <div className="flex flex-col gap-3">
-            <p className="text-[11px] font-medium text-black/30 tracking-[0.5px] uppercase">
+            <p className="text-[11px] font-medium text-black/30 dark:text-white/30 tracking-[0.5px] uppercase">
               Platform
             </p>
             {platformLinks.map((link, index) => (
               <Link
                 key={index}
                 href={link.href}
-                className={`text-[13px] font-normal text-black hover:text-black/50 transition-colors duration-150 tracking-[-0.1px] w-fit ${pathName === link.href ? "underline" : ""}`}
+                className={`text-[13px] font-normal text-black dark:text-white hover:text-black/50 dark:hover:text-white/50 transition-colors duration-150 tracking-[-0.1px] w-fit ${
+                  pathName === link.href ? "underline" : ""
+                }`}
               >
                 {link.label}
               </Link>
@@ -85,14 +88,16 @@ export default function Footer() {
 
           {/* Company Links */}
           <div className="flex flex-col gap-3">
-            <p className="text-[11px] font-medium text-black/30 tracking-[0.5px] uppercase">
+            <p className="text-[11px] font-medium text-black/30 dark:text-white/30 tracking-[0.5px] uppercase">
               Company
             </p>
             {companyLinks.map((link, index) => (
               <Link
                 key={index}
                 href={link.href}
-                className={`text-[13px] font-normal text-black hover:text-black/50 transition-colors duration-150 tracking-[-0.1px] w-fit ${pathName === link.href ? "underline" : ""}`}
+                className={`text-[13px] font-normal text-black dark:text-white hover:text-black/50 dark:hover:text-white/50 transition-colors duration-150 tracking-[-0.1px] w-fit ${
+                  pathName === link.href ? "underline" : ""
+                }`}
               >
                 {link.label}
               </Link>
@@ -101,47 +106,44 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="flex flex-col gap-3">
-            <p className="text-[11px] font-medium text-black/30 tracking-[0.5px] uppercase">
+            <p className="text-[11px] font-medium text-black/30 dark:text-white/30 tracking-[0.5px] uppercase">
               Contact
             </p>
             <a
               href="mailto:hello@ideaflow.com"
-              className="flex items-center gap-2 text-[13px] font-normal text-black hover:text-black/50 transition-colors duration-150 tracking-[-0.1px] w-fit"
+              className="flex items-center gap-2 text-[13px] font-normal text-black dark:text-white hover:text-black/50 dark:hover:text-white/50 transition-colors duration-150 tracking-[-0.1px] w-fit"
             >
               <HiOutlineMail className="text-[14px] shrink-0" />
               hello@ideaflow.com
             </a>
-            <div className="flex items-start gap-2 text-[13px] font-normal text-black tracking-[-0.1px]">
-              <HiOutlineLocationMarker className="text-[14px] shrink-0 mt-[2px]" />
-              <span className="text-black/50">London, United Kingdom</span>
+            <div className="flex items-start gap-2 text-[13px] font-normal tracking-[-0.1px]">
+              <HiOutlineLocationMarker className="text-[14px] shrink-0 mt-[2px] text-black dark:text-white" />
+              <span className="text-black/50 dark:text-white/50">
+                London, United Kingdom
+              </span>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-black/[0.06] py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[12px] font-normal text-black/30 tracking-[-0.1px]">
+        <div className="border-t border-black/[0.06] dark:border-white/[0.06] py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-[12px] font-normal text-black/30 dark:text-white/30 tracking-[-0.1px]">
             © {new Date().getFullYear()} IdeaFlow. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
-            <Link
-              href="/privacy"
-              className="text-[12px] font-normal text-black/30 hover:text-black transition-colors duration-150 tracking-[-0.1px]"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="/terms"
-              className="text-[12px] font-normal text-black/30 hover:text-black transition-colors duration-150 tracking-[-0.1px]"
-            >
-              Terms
-            </Link>
-            <Link
-              href="/cookies"
-              className="text-[12px] font-normal text-black/30 hover:text-black transition-colors duration-150 tracking-[-0.1px]"
-            >
-              Cookies
-            </Link>
+            {[
+              { label: "Privacy", href: "/privacy" },
+              { label: "Terms", href: "/terms" },
+              { label: "Cookies", href: "/cookies" },
+            ].map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-[12px] font-normal text-black/30 dark:text-white/30 hover:text-black dark:hover:text-white transition-colors duration-150 tracking-[-0.1px]"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

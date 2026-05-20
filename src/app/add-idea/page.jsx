@@ -69,7 +69,6 @@ export default function AddIdeaPage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(ideaData),
       });
-
       if (res.ok) {
         toast.success("Idea posted successfully!");
         formRef.current?.reset();
@@ -82,20 +81,20 @@ export default function AddIdeaPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#f0f2f5] pt-7">
+    <div className="min-h-screen w-full bg-[#f0f2f5] dark:bg-zinc-950 pt-7">
       <div className="max-w-2xl mx-auto px-5 sm:px-8 py-10">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-black tracking-[-0.03em]">
+          <h1 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-black dark:text-white tracking-[-0.03em]">
             Add your idea
           </h1>
-          <p className="text-[13px] font-normal text-black/40 tracking-[-0.1px] mt-1">
+          <p className="text-[13px] font-normal text-black/40 dark:text-white/40 tracking-[-0.1px] mt-1">
             Share your startup idea with the world.
           </p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white border border-black/[0.06] rounded-2xl p-6 sm:p-8">
+        <div className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-6 sm:p-8">
           <Form
             ref={formRef}
             onSubmit={onSubmit}
@@ -103,7 +102,7 @@ export default function AddIdeaPage() {
           >
             {/* Idea Title */}
             <TextField name="title" isRequired className="w-full">
-              <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+              <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                 Idea Title <span className="text-red-400">*</span>
               </Label>
               <Input
@@ -115,14 +114,14 @@ export default function AddIdeaPage() {
 
             {/* Short Description */}
             <TextField name="shortDescription" isRequired className="w-full">
-              <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+              <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                 Short Description <span className="text-red-400">*</span>
               </Label>
               <Input
                 placeholder="One line summary of your idea"
                 className="w-full"
               />
-              <Description className="text-[11px] text-black/30 mt-1 tracking-[-0.1px]">
+              <Description className="text-[11px] text-black/30 dark:text-white/30 mt-1 tracking-[-0.1px]">
                 Keep it under 100 characters
               </Description>
               <FieldError className="text-[11px] text-red-400 mt-1" />
@@ -130,7 +129,7 @@ export default function AddIdeaPage() {
 
             {/* Detailed Description */}
             <TextField name="detailedDescription" isRequired className="w-full">
-              <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+              <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                 Detailed Description <span className="text-red-400">*</span>
               </Label>
               <TextArea
@@ -142,7 +141,7 @@ export default function AddIdeaPage() {
 
             {/* Problem Statement */}
             <TextField name="problemStatement" isRequired className="w-full">
-              <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+              <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                 Problem Statement <span className="text-red-400">*</span>
               </Label>
               <TextArea
@@ -154,7 +153,7 @@ export default function AddIdeaPage() {
 
             {/* Proposed Solution */}
             <TextField name="proposedSolution" isRequired className="w-full">
-              <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+              <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                 Proposed Solution <span className="text-red-400">*</span>
               </Label>
               <TextArea
@@ -164,10 +163,10 @@ export default function AddIdeaPage() {
               <FieldError className="text-[11px] text-red-400 mt-1" />
             </TextField>
 
-            {/* Two columns — Category + Target Audience */}
+            {/* Category + Target Audience */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[13px] font-medium text-black tracking-[-0.1px]">
+                <label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px]">
                   Category <span className="text-red-400">*</span>
                 </label>
                 <Select
@@ -193,7 +192,7 @@ export default function AddIdeaPage() {
               </div>
 
               <TextField name="targetAudience" isRequired className="w-full">
-                <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+                <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                   Target Audience <span className="text-red-400">*</span>
                 </Label>
                 <Input
@@ -204,10 +203,10 @@ export default function AddIdeaPage() {
               </TextField>
             </div>
 
-            {/* Two columns — Image URL + Estimated Budget */}
+            {/* Image URL + Estimated Budget */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <TextField name="imageURL" className="w-full">
-                <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+                <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                   Image URL
                 </Label>
                 <Input
@@ -215,18 +214,18 @@ export default function AddIdeaPage() {
                   placeholder="https://example.com/image.jpg"
                   className="w-full"
                 />
-                <Description className="text-[11px] text-black/30 mt-1 tracking-[-0.1px]">
+                <Description className="text-[11px] text-black/30 dark:text-white/30 mt-1 tracking-[-0.1px]">
                   Optional banner image
                 </Description>
                 <FieldError className="text-[11px] text-red-400 mt-1" />
               </TextField>
 
               <TextField name="estimatedBudget" className="w-full">
-                <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+                <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                   Estimated Budget
                 </Label>
                 <Input placeholder="e.g. $5,000 — $10,000" className="w-full" />
-                <Description className="text-[11px] text-black/30 mt-1 tracking-[-0.1px]">
+                <Description className="text-[11px] text-black/30 dark:text-white/30 mt-1 tracking-[-0.1px]">
                   Optional
                 </Description>
                 <FieldError className="text-[11px] text-red-400 mt-1" />
@@ -235,23 +234,23 @@ export default function AddIdeaPage() {
 
             {/* Tags */}
             <TextField name="tags" className="w-full">
-              <Label className="text-[13px] font-medium text-black tracking-[-0.1px] mb-1.5 block">
+              <Label className="text-[13px] font-medium text-black dark:text-white tracking-[-0.1px] mb-1.5 block">
                 Tags
               </Label>
               <Input placeholder="e.g. AI, Mobile, B2C" className="w-full" />
-              <Description className="text-[11px] text-black/30 mt-1 tracking-[-0.1px]">
+              <Description className="text-[11px] text-black/30 dark:text-white/30 mt-1 tracking-[-0.1px]">
                 Separate tags with commas. Optional.
               </Description>
               <FieldError className="text-[11px] text-red-400 mt-1" />
             </TextField>
 
             {/* Divider */}
-            <div className="h-px bg-black/[0.06]" />
+            <div className="h-px bg-black/[0.06] dark:bg-white/[0.06]" />
 
             {/* Submit */}
             <Button
               type="submit"
-              className="w-full text-[13px] font-normal text-white bg-black hover:bg-black/80 py-2.5 rounded-full transition-all duration-150 tracking-[-0.1px]"
+              className="w-full text-[13px] font-normal text-white bg-black dark:bg-white dark:text-black hover:bg-black/80 dark:hover:bg-white/90 py-2.5 rounded-full transition-all duration-150 tracking-[-0.1px]"
             >
               Post Idea
             </Button>
