@@ -1,9 +1,10 @@
+// components/comment/Comment.jsx
 "use client";
 import React, { useState, useEffect } from "react";
 import { HiChat, HiPaperAirplane } from "react-icons/hi";
 import { ImSpinner2 } from "react-icons/im";
-import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
+import UserAvatar from "./UserAvatar";
 import CommentCard from "./CommentCard";
 
 const NewCommentOnPost = ({ idea }) => {
@@ -15,70 +16,62 @@ const NewCommentOnPost = ({ idea }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // ─── Fetch comments on mount
   useEffect(() => {
+    if (!idea?._id) return;
+
     const fetchComments = async () => {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${idea._id}`,
         );
         if (!res.ok) throw new Error("Failed to load comments");
-        const mainComments = await res.json();
-
-        const commentsWithReplies = await Promise.all(
-          mainComments.map(async (comment) => {
-            const replyRes = await fetch(
-              `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${comment._id}/replies`,
-            );
-            const replies = await replyRes.json();
-            return { ...comment, replies };
-          }),
-        );
-
-        setComments(commentsWithReplies);
+        setComments(await res.json());
       } catch (err) {
         console.error("Error loading comments:", err);
       }
     };
-    if (idea?._id) fetchComments();
+
+    fetchComments();
   }, [idea?._id]);
 
+  // ─── Submit new comment and show updated comment
   const handleAddComment = async () => {
     if (!newComment.trim() || !user) return;
+
     try {
       setLoading(true);
       setError(null);
-      const commentPayload = {
-        ideaId: idea._id,
-        text: newComment.trim(),
-        parentId: null,
-        likes: [],
-        likeCount: 0,
-        createdAt: new Date().toISOString(),
-        author: {
-          userId: user.id,
-          name: user.name,
-          photo: user.image,
-        },
-      };
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/comment`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(commentPayload),
+        body: JSON.stringify({
+          ideaId: idea._id,
+          text: newComment.trim(),
+          parentId: null,
+          likes: [],
+          likeCount: 0,
+          createdAt: new Date().toISOString(),
+          author: {
+            userId: user.id,
+            name: user.name,
+            photo: user.image,
+          },
+        }),
       });
+
       if (!res.ok) throw new Error("Failed to post comment");
-      const savedComment = await res.json();
-      const fullyStructuredComment = {
-        ...commentPayload,
-        ...savedComment,
-        replies: [],
-        author: savedComment.author?.name
-          ? savedComment.author
-          : commentPayload.author,
-      };
-      setComments((prev) => [fullyStructuredComment, ...prev]);
+
+      // just refetch all comments instead of merging
+      const updated = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${idea._id}`,
+      );
+      const data = await updated.json();
+      setComments(data);
       setNewComment("");
     } catch (err) {
-      console.error("Comment submission error:", err);
+      console.error("Comment error:", err);
       setError("Something went wrong. Try again.");
     } finally {
       setLoading(false);
@@ -98,27 +91,10 @@ const NewCommentOnPost = ({ idea }) => {
         </span>
       </div>
 
-      {/* Input */}
-      <div className="flex items-center gap-3 mb-5">
-        <div
-          className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 bg-black/[0.08] flex items-center justify-center"
-          suppressHydrationWarning
-        >
-          {user?.image ? (
-            <Image
-              fill
-              src={user.image}
-              alt="You"
-              sizes="32px"
-              className="object-cover"
-              suppressHydrationWarning
-            />
-          ) : (
-            <span className="text-[12px] font-semibold text-black/50">
-              {user?.name?.charAt(0)?.toUpperCase() || "?"}
-            </span>
-          )}
-        </div>
+      {/* Input row */}
+      <div className="flex items-center gap-3 mb-5" suppressHydrationWarning>
+        <UserAvatar user={user} size={32} />
+
         <div className="flex-1 flex items-center bg-[#f0f2f5] rounded-full px-4 py-2.5 gap-2">
           <input
             type="text"
@@ -147,14 +123,13 @@ const NewCommentOnPost = ({ idea }) => {
 
       <div className="h-px bg-black/[0.06] mb-4" />
 
-      {/* Comments List */}
+      {/* Comment list */}
       <div className="flex flex-col gap-5">
         {comments.map((comment) => (
           <CommentCard
             key={comment._id || comment.createdAt}
             comment={comment}
             currentUser={user}
-            depth={0}
           />
         ))}
       </div>

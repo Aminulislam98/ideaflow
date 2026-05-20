@@ -9,7 +9,6 @@ import {
   HiLightBulb,
   HiShare,
 } from "react-icons/hi";
-import { authClient } from "@/lib/auth-client";
 import NewCommentOnPost from "@/components/comment/Comment";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
