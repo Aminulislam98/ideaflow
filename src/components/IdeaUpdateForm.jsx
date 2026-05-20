@@ -12,6 +12,7 @@ import {
   Select,
   ListBox,
 } from "@heroui/react";
+import toast from "react-hot-toast";
 const categories = [
   "Tech",
   "FinTech",
@@ -29,8 +30,25 @@ const IdeaUpdateForm = ({ idea }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const form = Object.fromEntries(formData.entries());
-    console.log(`this is from data that will be update:`, form);
+    const updatedForm = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${idea._id}`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(updatedForm),
+        },
+      );
+      if (res.ok) {
+        toast.success("Idea updated successfully!");
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      toast.error("Failed to update idea. Check your connection.");
+    }
   };
   return (
     <div>
