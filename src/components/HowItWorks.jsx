@@ -45,7 +45,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="w-full bg-white dark:bg-zinc-950 py-20 px-5 sm:px-8">
+    <section className="w-full bg-white dark:bg-zinc-950  py-10 px-5 sm:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col items-center text-center mb-14">

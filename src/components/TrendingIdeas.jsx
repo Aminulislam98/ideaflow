@@ -14,14 +14,23 @@ export default async function TrendingIdeas() {
   }
 
   return (
-    <section className="w-full sm:px-8 py-4 md:py-16 max-w-6xl mx-auto">
+    <section className="w-full sm:px-8 py-4 md:py-10 max-w-6xl mx-auto">
       {/* Section Header */}
-      <div className="p-4">
+      {/* <div className="p-4 flex flex-col items-center justify-center">
         <p className="text-[11px] font-medium tracking-[1px] uppercase text-black/30 dark:text-white/30 mb-2">
           Trending
         </p>
         <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-black dark:text-white tracking-[-0.03em]">
           Ideas people love
+        </h2>
+      </div> */}
+
+      <div className="flex flex-col items-center text-center mb-14">
+        <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-black/30 dark:text-white/30 mb-3">
+          Trending
+        </span>
+        <h2 className="text-[28px] sm:text-[36px] font-bold text-black dark:text-white tracking-[-0.04em] leading-tight max-w-[480px]">
+          Ideas people love,{" "}
         </h2>
       </div>
 
