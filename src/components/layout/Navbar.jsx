@@ -2,7 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
   HiOutlineUser,
@@ -16,6 +16,14 @@ import {
 import { LogoutModal } from "../buttons/LogoutButton";
 import { useTheme } from "next-themes";
 
+const links = [
+  { name: "Home", href: "/", protected: false },
+  { name: "Ideas", href: "/ideas", protected: false },
+  { name: "Add Idea", href: "/add-idea", protected: true },
+  { name: "My Ideas", href: "/my-ideas", protected: true },
+  { name: "My Interactions", href: "/my-interactions", protected: true },
+];
+
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -25,27 +33,30 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathName = usePathname();
+  const router = useRouter();
 
   const isHome = pathName === "/";
   const closeMobile = () => setMobileOpen(false);
 
   useEffect(() => setMounted(true), []);
-
+  useEffect(() => {
+    closeMobile();
+  }, [pathName]);
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const links = [
-    { name: "Home", href: "/" },
-    { name: "Ideas", href: "/ideas" },
-    { name: "Add Idea", href: "/add-idea" },
-    { name: "My Ideas", href: "/my-ideas" },
-    { name: "My Interactions", href: "/my-instructions" },
-  ];
+  const handleNav = (href, isProtected) => {
+    closeMobile();
+    if (isProtected && !user) {
+      router.push(`/signin?callbackUrl=${encodeURIComponent(href)}`);
+      return;
+    }
+    router.push(href);
+  };
 
-  // dark mode aware text/hover/active
   const textColor = isHome
     ? scrolled
       ? "text-black dark:text-white"
@@ -79,29 +90,28 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className={`text-[15px] font-semibold tracking-[-0.3px] shrink-0 transition-colors duration-300 ${textColor}`}
+          className={`text-[15px] font-bold tracking-[-0.3px] shrink-0 transition-colors duration-300 ${textColor}`}
         >
           IdeaFlow
         </Link>
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-0.5">
-          {links.map((link, index) => (
-            <Link
-              key={index}
-              href={link?.href}
-              className={`text-[13px] font-normal px-3 py-1.5 rounded-lg transition-all duration-150 tracking-[-0.1px] ${textColor} ${hoverBg} ${
+          {links.map((link) => (
+            <button
+              key={link.href}
+              onClick={() => handleNav(link.href, link.protected)}
+              className={`text-[13px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 tracking-[-0.1px] ${textColor} ${hoverBg} ${
                 pathName === link.href ? activeBg : ""
               }`}
             >
-              {link?.name}
-            </Link>
+              {link.name}
+            </button>
           ))}
         </div>
 
         {/* Desktop Right */}
         <div className="hidden md:flex items-center gap-2">
-          {/* Theme Toggle */}
           {mounted && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -119,10 +129,10 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className={`flex items-center gap-1.5 text-[13px] font-normal px-2.5 py-1.5 rounded-lg transition-all duration-150 tracking-[-0.1px] ${textColor} ${hoverBg}`}
+                className={`flex items-center gap-1.5 text-[13px] font-semibold px-2.5 py-1.5 rounded-lg transition-all duration-150 tracking-[-0.1px] ${textColor} ${hoverBg}`}
               >
                 <div
-                  className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-[10px] font-medium shrink-0 transition-colors duration-300 ${
+                  className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 transition-colors duration-300 ${
                     isHome && !scrolled
                       ? "bg-white text-black"
                       : "bg-black dark:bg-white text-white dark:text-black"
@@ -143,7 +153,7 @@ export default function Navbar() {
               {dropdownOpen && (
                 <div className="absolute right-0 top-full mt-1.5 w-[200px] bg-white/80 dark:bg-zinc-800/80 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
                   <div className="px-3.5 py-3 border-b border-black/[0.06] dark:border-white/[0.06]">
-                    <p className="text-[13px] font-medium text-black dark:text-white tracking-[-0.2px] truncate">
+                    <p className="text-[13px] font-semibold text-black dark:text-white tracking-[-0.2px] truncate">
                       {user.name}
                     </p>
                     <p className="text-[11px] font-normal text-black/40 dark:text-white/40 truncate mt-0.5">
@@ -154,36 +164,35 @@ export default function Navbar() {
                     <Link
                       href="/profile"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
+                      className="flex items-center gap-2 px-3 py-2 text-[13px] font-semibold text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
                     >
                       <HiOutlineUser className="text-[13px] shrink-0" />
                       Profile
                     </Link>
                     <Link
-                      href="/updateProfile"
+                      href="/settings"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
+                      className="flex items-center gap-2 px-3 py-2 text-[13px] font-semibold text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
                     >
                       <HiOutlineCog className="text-[13px] shrink-0" />
                       Settings
                     </Link>
-
                     {mounted && (
                       <button
                         onClick={() =>
                           setTheme(theme === "dark" ? "light" : "dark")
                         }
-                        className="w-full flex items-center gap-2 px-3 py-2 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
+                        className="w-full flex items-center gap-2 px-3 py-2 text-[13px] font-semibold text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
                       >
                         {theme === "dark" ? (
                           <>
-                            <HiSun className="text-[13px] shrink-0" />
-                            Light Mode
+                            <HiSun className="text-[13px] shrink-0" /> Light
+                            Mode
                           </>
                         ) : (
                           <>
-                            <HiMoon className="text-[13px] shrink-0" />
-                            Dark Mode
+                            <HiMoon className="text-[13px] shrink-0" /> Dark
+                            Mode
                           </>
                         )}
                       </button>
@@ -198,14 +207,14 @@ export default function Navbar() {
           ) : (
             <>
               <Link
-                href="/signin"
-                className={`text-[13px] font-normal px-3 py-1.5 rounded-lg transition-all duration-150 tracking-[-0.1px] ${textColor} ${hoverBg}`}
+                href={`/signin?callbackUrl=${encodeURIComponent(pathName)}`}
+                className={`text-[13px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 tracking-[-0.1px] ${textColor} ${hoverBg}`}
               >
                 Sign in
               </Link>
               <Link
-                href="/signup"
-                className={`text-[13px] font-normal px-4 py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px] ${
+                href={`/signup?callbackUrl=${encodeURIComponent(pathName)}`}
+                className={`text-[13px] font-semibold px-4 py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px] ${
                   isHome && !scrolled
                     ? "text-black bg-white hover:bg-white/90"
                     : "text-white bg-black dark:bg-white dark:text-black hover:bg-black/80 dark:hover:bg-white/90"
@@ -221,159 +230,125 @@ export default function Navbar() {
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle navigation menu"
-          className={`md:hidden flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-150 ${textColor} ${hoverBg}`}
+          className={`md:hidden flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-150 ${textColor} ${hoverBg}`}
         >
           {mobileOpen ? (
-            <HiX className="text-[18px]" />
+            <HiX className="text-[22px]" />
           ) : (
-            <HiMenu className="text-[18px]" />
+            <HiMenu className="text-[22px]" />
           )}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-black/[0.06] dark:border-white/[0.06] bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl px-2 pb-3 pt-1.5 flex flex-col">
-          {user && (
-            <>
-              <div className="flex items-center gap-2.5 px-3 py-2.5">
-                <div className="w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center text-[12px] font-medium text-white dark:text-black shrink-0">
-                  {user.name?.charAt(0).toUpperCase() ?? "U"}
+        <div className="md:hidden fixed top-[52px] left-0 right-0 bottom-0 bg-white dark:bg-zinc-900 flex flex-col overflow-hidden z-50">
+          <div className="flex-1 overflow-y-auto px-4 pb-8 pt-3 flex flex-col">
+            {user && (
+              <>
+                <div className="flex items-center gap-3 px-2 py-3.5">
+                  <div className="w-10 h-10 rounded-full bg-black dark:bg-white flex items-center justify-center text-[15px] font-bold text-white dark:text-black shrink-0">
+                    {user.name?.charAt(0).toUpperCase() ?? "U"}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[16px] font-bold text-black dark:text-white tracking-[-0.2px] truncate">
+                      {user.name}
+                    </p>
+                    <p className="text-[12px] font-normal text-black/40 dark:text-white/40 truncate">
+                      {user.email}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-[13px] font-medium text-black dark:text-white tracking-[-0.2px] truncate">
-                    {user.name}
-                  </p>
-                  <p className="text-[11px] font-normal text-black/40 dark:text-white/40 truncate">
-                    {user.email}
-                  </p>
-                </div>
-              </div>
-              <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mx-2 mb-1" />
-            </>
-          )}
+                <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mb-2" />
+              </>
+            )}
 
-          <Link
-            href="/"
-            onClick={closeMobile}
-            className="px-3 py-2.5 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
-          >
-            Home
-          </Link>
-          <Link
-            href="/ideas"
-            onClick={closeMobile}
-            className="px-3 py-2.5 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
-          >
-            Ideas
-          </Link>
-
-          <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mx-2 my-1" />
-
-          {user ? (
-            <>
-              <Link
-                href="/ideas/add"
-                onClick={closeMobile}
-                className="px-3 py-2.5 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
-              >
-                Add Idea
-              </Link>
-              <Link
-                href="/my-ideas"
-                onClick={closeMobile}
-                className="px-3 py-2.5 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
-              >
-                My Ideas
-              </Link>
-              <Link
-                href="/my-interactions"
-                onClick={closeMobile}
-                className="px-3 py-2.5 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
-              >
-                My Interactions
-              </Link>
-
-              <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mx-2 my-1" />
-
-              <Link
-                href="/profile"
-                onClick={closeMobile}
-                className="px-3 py-2.5 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
-              >
-                Profile
-              </Link>
-              <Link
-                href="/settings"
-                onClick={closeMobile}
-                className="px-3 py-2.5 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px]"
-              >
-                Settings
-              </Link>
-
-              {mounted && (
-                <button
-                  onClick={() => {
-                    setTheme(theme === "dark" ? "light" : "dark");
-                    closeMobile();
-                  }}
-                  className="text-left px-3 py-2.5 text-[13px] font-normal text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px] w-full flex items-center gap-2"
-                >
-                  {theme === "dark" ? (
-                    <>
-                      <HiSun className="text-[14px]" />
-                      Light Mode
-                    </>
-                  ) : (
-                    <>
-                      <HiMoon className="text-[14px]" />
-                      Dark Mode
-                    </>
-                  )}
-                </button>
-              )}
-
-              <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mx-2 my-1" />
-
+            {/* All links in one loop */}
+            {links.map((link) => (
               <button
-                onClick={() => closeMobile()}
-                className="text-left px-3 py-2.5 text-[13px] font-normal text-red-500 hover:bg-red-50/60 dark:hover:bg-red-500/10 rounded-xl transition-all duration-150 tracking-[-0.1px] w-full"
+                key={link.href}
+                onClick={() => handleNav(link.href, link.protected)}
+                className={`text-left px-4 py-3.5 text-[15px] font-semibold rounded-xl transition-all duration-150 tracking-[-0.1px] w-full ${
+                  pathName === link.href
+                    ? "bg-black/[0.06] dark:bg-white/[0.06] text-black dark:text-white"
+                    : "text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+                }`}
               >
-                Sign Out
+                {link.name}
               </button>
-            </>
-          ) : (
-            <>
-              <span className="px-3 py-2.5 text-[13px] font-normal text-black/20 dark:text-white/20 cursor-not-allowed select-none tracking-[-0.1px]">
-                Add Idea
-              </span>
-              <span className="px-3 py-2.5 text-[13px] font-normal text-black/20 dark:text-white/20 cursor-not-allowed select-none tracking-[-0.1px]">
-                My Ideas
-              </span>
-              <span className="px-3 py-2.5 text-[13px] font-normal text-black/20 dark:text-white/20 cursor-not-allowed select-none tracking-[-0.1px]">
-                My Interactions
-              </span>
+            ))}
 
-              <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mx-2 my-2" />
-
-              <div className="flex gap-2 px-1">
+            {user && (
+              <>
+                <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] my-2" />
                 <Link
-                  href="/login"
+                  href="/profile"
                   onClick={closeMobile}
-                  className="flex-1 text-center text-[13px] font-normal text-black dark:text-white border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] px-4 py-2 rounded-full transition-all duration-150 tracking-[-0.1px]"
+                  className={`px-4 py-3.5 text-[15px] font-semibold rounded-xl transition-all duration-150 tracking-[-0.1px] ${
+                    pathName === "/profile"
+                      ? "bg-black/[0.06] dark:bg-white/[0.06] text-black dark:text-white"
+                      : "text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+                  }`}
                 >
-                  Sign in
+                  Profile
                 </Link>
                 <Link
-                  href="/register"
+                  href="/settings"
                   onClick={closeMobile}
-                  className="flex-1 text-center text-[13px] font-normal text-white dark:text-black bg-black dark:bg-white hover:bg-black/80 dark:hover:bg-white/90 px-4 py-2 rounded-full transition-all duration-150 tracking-[-0.1px]"
+                  className={`px-4 py-3.5 text-[15px] font-semibold rounded-xl transition-all duration-150 tracking-[-0.1px] ${
+                    pathName === "/settings"
+                      ? "bg-black/[0.06] dark:bg-white/[0.06] text-black dark:text-white"
+                      : "text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+                  }`}
                 >
-                  Get started
+                  Settings
                 </Link>
-              </div>
-            </>
-          )}
+                {mounted && (
+                  <button
+                    onClick={() => {
+                      setTheme(theme === "dark" ? "light" : "dark");
+                      closeMobile();
+                    }}
+                    className="text-left px-4 py-3.5 text-[15px] font-semibold text-black dark:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] rounded-xl transition-all duration-150 tracking-[-0.1px] w-full flex items-center gap-3"
+                  >
+                    {theme === "dark" ? (
+                      <>
+                        <HiSun className="text-[18px]" /> Light Mode
+                      </>
+                    ) : (
+                      <>
+                        <HiMoon className="text-[18px]" /> Dark Mode
+                      </>
+                    )}
+                  </button>
+                )}
+                <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] my-2" />
+                <LogoutModal setDropdownOpen={closeMobile} mobileView />
+              </>
+            )}
+
+            {!user && (
+              <>
+                <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] my-3" />
+                <div className="flex flex-col gap-3">
+                  <Link
+                    href={`/signin?callbackUrl=${encodeURIComponent(pathName)}`}
+                    onClick={closeMobile}
+                    className="w-full text-center text-[15px] font-semibold text-black dark:text-white border-2 border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] px-4 py-3 rounded-2xl transition-all duration-150 tracking-[-0.1px]"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href={`/signup?callbackUrl=${encodeURIComponent(pathName)}`}
+                    onClick={closeMobile}
+                    className="w-full text-center text-[15px] font-semibold text-white dark:text-black bg-black dark:bg-white hover:bg-black/80 dark:hover:bg-white/90 px-4 py-3 rounded-2xl transition-all duration-150 tracking-[-0.1px]"
+                  >
+                    Get started
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
     </nav>

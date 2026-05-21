@@ -16,11 +16,25 @@ const categoryColors = {
 
 export default async function MyIdeasPage() {
   const session = await auth.api.getSession({ headers: await headers() });
+  console.log("1️⃣ session:", JSON.stringify(session, null, 2));
+  console.log("2️⃣ session.user:", session?.user);
+  console.log("3️⃣ session.session:", session?.session);
+  console.log("4️⃣ token from session:", session?.session?.token);
+  console.log("5️⃣ userId:", session?.user?.id);
   const user = session?.user;
   const userId = session?.user.id;
   const { token } = await auth.api.getToken({
     headers: await headers(),
   });
+  console.log("6️⃣ token from getToken:", token);
+
+  console.log("7️⃣ SERVER_URL:", process.env.NEXT_PUBLIC_SERVER_URL);
+  console.log(
+    "8️⃣ fetch URL:",
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/user/${session?.user?.id}`,
+  );
+
+  console.log("token", token);
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/user/${userId}`,
     {

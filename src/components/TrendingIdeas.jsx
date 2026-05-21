@@ -14,9 +14,9 @@ export default async function TrendingIdeas() {
   }
 
   return (
-    <section className="w-full px-5 sm:px-8 py-16 max-w-6xl mx-auto">
+    <section className="w-full sm:px-8 py-4 md:py-16 max-w-6xl mx-auto">
       {/* Section Header */}
-      <div className="mb-10">
+      <div className="p-4">
         <p className="text-[11px] font-medium tracking-[1px] uppercase text-black/30 dark:text-white/30 mb-2">
           Trending
         </p>
@@ -26,7 +26,7 @@ export default async function TrendingIdeas() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-3">
         {ideas.map((idea) => (
           <IdeaCard key={idea._id} idea={idea} />
         ))}

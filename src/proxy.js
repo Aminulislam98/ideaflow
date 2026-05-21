@@ -20,7 +20,7 @@ export const config = {
     "/profile",
     "/my-ideas",
     "/add-idea",
-    "/my-instructions",
+    "/my-interactions",
     "/ideas/:path",
   ],
 };
