@@ -1,3 +1,5 @@
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { HiThumbUp, HiChat, HiBadgeCheck } from "react-icons/hi";
@@ -119,7 +121,21 @@ const categoryColors = {
 const totalLikes = interactions.filter((i) => i.type === "like").length;
 const totalComments = interactions.filter((i) => i.type === "comment").length;
 
-export default function MyInteractionsPage() {
+export default async function MyInteractionsPage() {
+  const { token } = await auth.api.getToken({ headers: await headers() });
+  const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user;
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/my-interaction/${user.id}`,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  const data = await res.json();
+  console.log("this is all interaction:", data);
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] dark:bg-zinc-950 pt-16">
       <div className="max-w-3xl mx-auto px-5 sm:px-8 py-6 flex flex-col gap-5">
