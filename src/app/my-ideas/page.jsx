@@ -10,8 +10,6 @@ export async function generateMetadata() {
   const userName = session?.user?.name;
 
   return {
-    // If the user's name is "John Doe", it will show "John Doe's Ideas | IdeaFlow"
-    // Falls back to "My Ideas" if the session hasn't loaded yet
     title: userName ? `${userName}'s Ideas | IdeaFlow` : "My Ideas | IdeaFlow",
     description:
       "Manage, edit, and track the performance of your shared ideas.",
@@ -23,12 +21,30 @@ export async function generateMetadata() {
 }
 
 const categoryColors = {
-  FinTech: { bg: "bg-blue-50", text: "text-blue-600" },
-  EdTech: { bg: "bg-violet-50", text: "text-violet-600" },
-  HealthTech: { bg: "bg-green-50", text: "text-green-600" },
-  GreenTech: { bg: "bg-emerald-50", text: "text-emerald-600" },
-  SaaS: { bg: "bg-orange-50", text: "text-orange-600" },
-  AgriTech: { bg: "bg-lime-50", text: "text-lime-600" },
+  FinTech: {
+    bg: "bg-blue-50 dark:bg-blue-500/10",
+    text: "text-blue-600 dark:text-blue-400",
+  },
+  EdTech: {
+    bg: "bg-violet-50 dark:bg-violet-500/10",
+    text: "text-violet-600 dark:text-violet-400",
+  },
+  HealthTech: {
+    bg: "bg-green-50 dark:bg-green-500/10",
+    text: "text-green-600 dark:text-green-400",
+  },
+  GreenTech: {
+    bg: "bg-emerald-50 dark:bg-emerald-500/10",
+    text: "text-emerald-600 dark:text-emerald-400",
+  },
+  SaaS: {
+    bg: "bg-orange-50 dark:bg-orange-500/10",
+    text: "text-orange-600 dark:text-orange-400",
+  },
+  AgriTech: {
+    bg: "bg-lime-50 dark:bg-lime-500/10",
+    text: "text-lime-600 dark:text-lime-400",
+  },
 };
 
 export default async function MyIdeasPage() {
@@ -38,9 +54,6 @@ export default async function MyIdeasPage() {
   const { token } = await auth.api.getToken({
     headers: await headers(),
   });
-
-  console.log("SESSION:", JSON.stringify(session));
-  console.log("TOKEN:", token);
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/user/${userId}`,
@@ -82,7 +95,7 @@ export default async function MyIdeasPage() {
             </div>
           </div>
 
-          {/* Stats */}
+          {/* Stats Cards Row */}
           <div className="flex items-center gap-3">
             {[
               {
@@ -97,7 +110,7 @@ export default async function MyIdeasPage() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-xl px-4 py-2.5 text-center"
+                className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-xl px-4 py-2.5 text-center min-w-[90px]"
               >
                 <p className="text-[18px] font-semibold text-black dark:text-white tracking-[-0.03em]">
                   {stat.value}
@@ -115,19 +128,19 @@ export default async function MyIdeasPage() {
           My Ideas
         </p>
 
-        {/* Grid */}
+        {/* Main Grid Content */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {myIdeas.map((idea) => {
             const color = categoryColors[idea.category] || {
-              bg: "bg-gray-50",
-              text: "text-gray-600",
+              bg: "bg-gray-50 dark:bg-zinc-800",
+              text: "text-gray-600 dark:text-zinc-400",
             };
             return (
               <div
                 key={idea._id}
-                className="flex flex-col bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden hover:shadow-[0_4px_20px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_4px_20px_rgb(0,0,0,0.3)] transition-all duration-200"
+                className="flex flex-col bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-200"
               >
-                {/* Banner */}
+                {/* Banner wrapper block */}
                 <div className="relative w-full h-40 shrink-0">
                   <Image
                     fill
@@ -143,7 +156,7 @@ export default async function MyIdeasPage() {
                   </span>
                 </div>
 
-                {/* Body */}
+                {/* Card Body content */}
                 <div className="flex flex-col flex-1 p-4">
                   <h3 className="text-[14px] font-semibold text-black dark:text-white tracking-[-0.02em] leading-snug mb-1.5">
                     {idea.title}
@@ -152,12 +165,12 @@ export default async function MyIdeasPage() {
                     {idea.shortDescription}
                   </p>
 
-                  {/* Stats row */}
+                  {/* Feed Interaction data layer */}
                   <div className="flex items-center gap-3 mt-3 mb-3">
-                    <span className="text-[12px] font-normal text-rose-400 bg-rose-50 dark:bg-rose-500/10 px-2 py-0.5 rounded-full">
+                    <span className="text-[12px] font-normal text-rose-500 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 px-2 py-0.5 rounded-full">
                       ♥ {idea.likeCount}
                     </span>
-                    <span className="text-[12px] font-normal text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-full">
+                    <span className="text-[12px] font-normal text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-full">
                       💬 {idea.commentCount}
                     </span>
                     <span className="text-[11px] font-normal text-black/30 dark:text-white/30 tracking-[-0.1px] ml-auto">
@@ -168,10 +181,9 @@ export default async function MyIdeasPage() {
                     </span>
                   </div>
 
-                  {/* Divider */}
                   <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mb-3" />
 
-                  {/* Actions */}
+                  {/* Actions wrapper row */}
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/my-ideas/${idea._id}`}
@@ -180,7 +192,9 @@ export default async function MyIdeasPage() {
                       <HiPencil className="text-[13px]" />
                       Edit
                     </Link>
+
                     <DeleteIdeaAlert idea={idea} />
+
                     <Link
                       href={`/ideas/${idea._id}`}
                       className="flex-1 flex items-center justify-center gap-1.5 text-[12px] font-normal text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] py-1.5 rounded-full transition-all duration-150 tracking-[-0.1px]"
@@ -194,13 +208,13 @@ export default async function MyIdeasPage() {
           })}
         </div>
 
-        {/* Empty state */}
+        {/* Adaptive empty state box wrapper */}
         {myIdeas.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-24 gap-3">
-            <div className="w-20 h-20 rounded-full bg-[#f0f2f5] dark:bg-zinc-800 flex items-center justify-center">
-              <HiLightBulb className="text-[36px] text-black/20 dark:text-white/20" />
+          <div className="flex flex-col items-center justify-center py-24 gap-3   mt-6">
+            <div className="w-16 h-16 rounded-full bg-black/[0.03] dark:bg-zinc-800 flex items-center justify-center">
+              <HiLightBulb className="text-[32px] text-black/30 dark:text-white/30" />
             </div>
-            <div className="flex flex-col items-center gap-1 text-center">
+            <div className="flex flex-col items-center gap-1 text-center px-4">
               <p className="text-[15px] font-bold text-black dark:text-white tracking-[-0.02em]">
                 No ideas yet
               </p>

@@ -1,5 +1,6 @@
 import FilterBar from "@/components/FilterBar";
 import IdeaCard from "@/components/IdeaCard";
+import { HiLightBulb } from "react-icons/hi";
 
 // Fallback string validation to prevent 'undefined' passing into new URL()
 const baseUrl =
@@ -34,7 +35,6 @@ export const metadata = {
   creator: "IdeaVault",
   publisher: "IdeaVault",
 
-  // FIXED: Using the validated baseline URL string variable
   metadataBase: new URL(baseUrl),
 
   alternates: {
@@ -105,12 +105,34 @@ export default async function IdeasPage({ searchParams }) {
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] dark:bg-zinc-950">
       <FilterBar />
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {ideas.map((idea) => (
-            <IdeaCard key={idea?._id} idea={idea} />
-          ))}
-        </div>
+      <div className="max-w-6xl mx-auto  sm:px-8">
+        {/* Conditional Layout Rendering */}
+        {ideas.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-3 sm:py-4">
+            {ideas.map((idea) => (
+              <IdeaCard key={idea?._id} idea={idea} />
+            ))}
+          </div>
+        ) : (
+          /* Premium Black-Themed Empty State Box */
+          <div className="flex flex-col items-center justify-center text-center py-24 px-4 my-6 ">
+            {/* Icon Circle */}
+            <div className="w-16 h-16 rounded-full bg-black/[0.03] dark:bg-zinc-800/80 border border-black/[0.06] dark:border-white/[0.08] flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-105">
+              <HiLightBulb className="text-[30px] text-black/40 dark:text-zinc-400" />
+            </div>
+
+            {/* Heading */}
+            <h3 className="text-[16px] font-semibold text-black dark:text-white tracking-[-0.02em] mb-1">
+              No ideas available
+            </h3>
+
+            {/* Description */}
+            <p className="text-[13px] font-normal text-black/50 dark:text-zinc-400 max-w-[280px] leading-relaxed tracking-[-0.01em]">
+              We couldn't find anything matching those parameters. Try adjusting
+              your search query or filters.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

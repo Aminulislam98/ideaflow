@@ -157,11 +157,11 @@ const FilterBar = () => {
           {/* Right side — two dropdowns */}
           <div className="flex items-center gap-2 shrink-0">
             {/* Category */}
-            <div className="relative flex items-center gap-1.5 bg-[#f0f2f5] dark:bg-zinc-800 hover:bg-black/[0.07] dark:hover:bg-zinc-700 border border-transparent hover:border-black/[0.06] dark:hover:border-white/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
-              <span className="text-[13px] font-normal text-black dark:text-white tracking-[-0.1px] whitespace-nowrap">
+            <div className="relative flex items-center gap-1.5 md:bg-[#f0f2f5] md:dark:bg-zinc-800 md:hover:bg-black/[0.07] md:dark:hover:bg-zinc-700 border border-transparent md:hover:border-black/[0.06] md:dark:hover:border-white/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
+              <span className="text-sm font-semibold text-black dark:text-white tracking-[-0.1px] whitespace-nowrap">
                 {selectedCategory}
               </span>
-              <HiChevronDown className="text-black/40 dark:text-white/40 text-[13px] shrink-0" />
+              <HiChevronDown className="text-black/40 dark:text-white/40 text-xl shrink-0" />
               <select
                 defaultValue=""
                 onChange={(e) => handleCategory(e.target.value)}
@@ -179,11 +179,11 @@ const FilterBar = () => {
             </div>
 
             {/* Sort */}
-            <div className="relative flex items-center gap-1.5 bg-[#f0f2f5] dark:bg-zinc-800 hover:bg-black/[0.07] dark:hover:bg-zinc-700 border border-transparent hover:border-black/[0.06] dark:hover:border-white/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
-              <span className="text-[13px] font-normal text-black dark:text-white tracking-[-0.1px] whitespace-nowrap">
+            <div className="relative flex items-center gap-1.5 md:bg-[#f0f2f5] md:dark:bg-zinc-800 md:hover:bg-black/[0.07] md:dark:hover:bg-zinc-700 border border-transparent md:hover:border-black/[0.06] md:dark:hover:border-white/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
+              <span className="text-sm  font-semibold text-black dark:text-white tracking-[-0.1px] whitespace-nowrap">
                 {sortType}
               </span>
-              <HiChevronDown className="text-black/40 dark:text-white/40 text-[13px] shrink-0" />
+              <HiChevronDown className="text-black/40 dark:text-white/40 text-xl shrink-0" />
               <select
                 defaultValue=""
                 onChange={(e) => handleSort(e.target.value)}
