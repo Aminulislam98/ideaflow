@@ -64,9 +64,13 @@ export default function AddIdeaPage() {
     };
 
     try {
-      const res = await fetch("http://localhost:4000/idea", {
+      const { data: token } = await authClient.token();
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea`, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${token.token}`,
+        },
         body: JSON.stringify(ideaData),
       });
       if (res.ok) {

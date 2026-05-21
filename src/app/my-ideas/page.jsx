@@ -18,9 +18,16 @@ export default async function MyIdeasPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user;
   const userId = session?.user.id;
-
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/user/${userId}`,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
   );
   const myIdeas = await res.json();
 
