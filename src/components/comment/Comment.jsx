@@ -15,6 +15,7 @@ const NewCommentOnPost = ({ idea }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Fetch comments on component mount or idea change
   useEffect(() => {
     if (!idea?._id) return;
     const fetchComments = async () => {
@@ -31,6 +32,7 @@ const NewCommentOnPost = ({ idea }) => {
     fetchComments();
   }, [idea?._id]);
 
+  // Handle posting a brand new comment
   const handleAddComment = async () => {
     if (!newComment.trim() || !user) return;
     try {
@@ -50,6 +52,8 @@ const NewCommentOnPost = ({ idea }) => {
         }),
       });
       if (!res.ok) throw new Error("Failed to post comment");
+
+      // Refresh list from the backend database directly
       const updated = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${idea._id}`,
       );
@@ -63,9 +67,16 @@ const NewCommentOnPost = ({ idea }) => {
     }
   };
 
+  // Optimistically remove the comment from local array state when deleted
+  const handleDeleteCommentState = (commentId) => {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment._id !== commentId),
+    );
+  };
+
   return (
     <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
-      {/* Header */}
+      {/* Header Info */}
       <div className="flex items-center gap-2 mb-5">
         <HiChat className="text-[16px] text-black dark:text-white" />
         <h2 className="text-[15px] font-bold text-black dark:text-white tracking-[-0.02em]">
@@ -76,7 +87,7 @@ const NewCommentOnPost = ({ idea }) => {
         </span>
       </div>
 
-      {/* Input row */}
+      {/* Write Input Area */}
       <div className="flex items-center gap-3 mb-5" suppressHydrationWarning>
         <UserAvatar user={user} size={32} />
 
@@ -108,15 +119,21 @@ const NewCommentOnPost = ({ idea }) => {
 
       <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mb-4" />
 
-      {/* Comment list */}
+      {/* Render Comment List Loop */}
       <div className="flex flex-col gap-5">
         {comments.map((comment) => (
           <CommentCard
             key={comment._id || comment.createdAt}
             comment={comment}
             currentUser={user}
+            onDelete={handleDeleteCommentState}
           />
         ))}
+        {comments.length === 0 && (
+          <p className="text-center text-[13px] text-black/30 dark:text-white/30 py-4">
+            No comments yet. Be the first to start the discussion!
+          </p>
+        )}
       </div>
     </div>
   );
