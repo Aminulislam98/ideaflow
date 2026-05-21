@@ -16,7 +16,7 @@ import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SignInPage() {
+export default function SignInClientPage() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [loading, setLoading] = useState(false);

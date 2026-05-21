@@ -23,7 +23,7 @@ const FilterBar = () => {
     }
     const fetchSuggestions = async () => {
       const res = await fetch(
-        `${NEXT_PUBLIC_SERVER_URL}/ideas/suggestions?search=${debouncedSearch}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/suggestions?search=${debouncedSearch}`,
       );
       const data = await res.json();
       setSuggestions(data);

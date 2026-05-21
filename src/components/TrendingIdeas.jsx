@@ -1,10 +1,17 @@
 import IdeaCard from "./IdeaCard";
 
 export default async function TrendingIdeas() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/trending`,
-  );
-  const ideas = await res.json();
+  const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+
+  let ideas = [];
+  try {
+    const res = await fetch(`${serverUrl}/ideas/trending`, {
+      cache: "no-store", // অথবা next: { revalidate: 60 }
+    });
+    ideas = await res.json();
+  } catch (err) {
+    console.error("Failed to fetch trending ideas:", err);
+  }
 
   return (
     <section className="w-full px-5 sm:px-8 py-16 max-w-6xl mx-auto">
