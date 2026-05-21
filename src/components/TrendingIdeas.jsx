@@ -1,7 +1,9 @@
 import IdeaCard from "./IdeaCard";
 
 export default async function TrendingIdeas() {
-  const res = await fetch("http://localhost:4000/ideas/trending");
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/trending`,
+  );
   const ideas = await res.json();
 
   return (

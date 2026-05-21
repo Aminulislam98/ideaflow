@@ -3,7 +3,7 @@ import IdeaCard from "@/components/IdeaCard";
 
 const getIdeasData = async (search = "", category = "", sort = "") => {
   const res = await fetch(
-    `http://localhost:4000/ideas?search=${search}&category=${category}&sort=${sort}`,
+    `${NEXT_PUBLIC_SERVER_URL}/ideas?search=${search}&category=${category}&sort=${sort}`,
     { cache: "no-store" },
   );
   const data = await res.json();
