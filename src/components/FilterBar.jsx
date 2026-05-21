@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { HiChevronDown, HiSearch } from "react-icons/hi";
 import { useDebounce } from "use-debounce";
 
@@ -15,6 +15,23 @@ const FilterBar = () => {
   const [debouncedSearch] = useDebounce(search, 300);
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [sortType, setSortType] = useState("Newest");
+
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY < lastScrollY.current) {
+        setVisible(true);
+      } else if (currentY > lastScrollY.current && currentY > 60) {
+        setVisible(false);
+      }
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (!debouncedSearch) {
@@ -66,14 +83,17 @@ const FilterBar = () => {
   };
 
   return (
-    <div className="pt-13 sticky top-0 z-40">
-      <div className="bg-white dark:bg-zinc-900 border-b border-black/[0.06] dark:border-white/[0.06]">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+    <div
+      className={`pt-14 sticky top-0 z-40 transition-transform duration-200 ${
+        visible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
+      <div className="bg-white dark:bg-zinc-950 border-b border-black/[0.06] dark:border-white/[0.05]">
+        <div className="max-w-6xl mx-auto px-2 sm:px-8 py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
           {/* Search */}
           <div className="relative flex-1 min-w-0">
-            <div className="flex items-center min-w-0 shadow-[inset_0_1px_4px_rgb(0,0,0,0.08)] dark:shadow-[inset_0_1px_4px_rgb(255,255,255,0.04)] rounded-full border border-black/[0.08] dark:border-white/[0.08]">
-              {/* Input */}
-              <div className="flex items-center gap-2.5 flex-1 bg-white dark:bg-zinc-900 rounded-l-full px-4 py-2 min-w-0">
+            <div className="flex items-center min-w-0 border border-black/[0.1] dark:border-white/[0.08] rounded-xl overflow-hidden bg-white dark:bg-zinc-950 shadow-[inset_0_1px_3px_rgb(0,0,0,0.06)] dark:shadow-none">
+              <div className="flex items-center gap-3 flex-1 px-4 py-2.5 min-w-0">
                 <input
                   value={search}
                   onChange={(e) => {
@@ -87,26 +107,24 @@ const FilterBar = () => {
                   }
                   type="text"
                   placeholder="Search ideas..."
-                  className="flex-1 bg-transparent text-base font-normal text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/30 tracking-[-0.1px] outline-none min-w-0"
+                  className="flex-1 bg-transparent text-[14px] font-semibold text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/30 tracking-[-0.1px] outline-none min-w-0"
                 />
               </div>
 
-              {/* Divider */}
-              <div className="w-px h-5 bg-black/[0.1] dark:bg-white/[0.1] shrink-0" />
+              <div className="w-px h-5 bg-black/[0.08] dark:bg-white/[0.08] shrink-0" />
 
-              {/* Search Button */}
               <button
                 onClick={handleSearch}
-                className="flex items-center justify-center bg-[#f8f8f8] dark:bg-zinc-800 hover:bg-[#f0f0f0] dark:hover:bg-zinc-700 rounded-r-full px-5 py-2 transition-all duration-150 shrink-0"
+                className="flex items-center justify-center hover:bg-black/[0.04] dark:hover:bg-white/[0.06] px-5 py-2.5 transition-all duration-150 shrink-0 self-stretch"
               >
-                <HiSearch className="text-black/50 dark:text-white/50 text-[17px]" />
+                <HiSearch className="text-black/60 dark:text-white/60 text-[22px]" />
               </button>
             </div>
 
             {/* Suggestions Dropdown */}
             {showSuggestions && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] z-50">
-                <p className="text-[11px] font-medium text-black/30 dark:text-white/30 tracking-[0.5px] uppercase px-4 pt-3 pb-1.5">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] z-50">
+                <p className="text-[11px] font-black text-black/30 dark:text-white/30 tracking-[0.8px] uppercase px-4 pt-3 pb-1.5">
                   Suggestions
                 </p>
 
@@ -129,9 +147,9 @@ const FilterBar = () => {
                         />
                       </div>
                     ) : (
-                      <HiSearch className="text-black/20 dark:text-white/20 text-[13px] shrink-0" />
+                      <HiSearch className="text-black/20 dark:text-white/20 text-[14px] shrink-0" />
                     )}
-                    <span className="text-base font-normal text-black dark:text-white tracking-[-0.1px]">
+                    <span className="text-[13px] font-semibold text-black dark:text-white tracking-[-0.1px]">
                       {s.title}
                     </span>
                   </button>
@@ -142,10 +160,10 @@ const FilterBar = () => {
                   onMouseDown={handleSearch}
                   className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all duration-150 text-left"
                 >
-                  <HiSearch className="text-black/40 dark:text-white/40 text-[13px] shrink-0" />
-                  <span className="text-[13px] font-normal text-black/60 dark:text-white/60 tracking-[-0.1px]">
+                  <HiSearch className="text-black/40 dark:text-white/40 text-[14px] shrink-0" />
+                  <span className="text-[13px] font-semibold text-black/60 dark:text-white/60 tracking-[-0.1px]">
                     Search for{" "}
-                    <span className="text-black dark:text-white font-medium">
+                    <span className="text-black dark:text-white font-bold">
                       "{search}"
                     </span>
                   </span>
@@ -157,11 +175,11 @@ const FilterBar = () => {
           {/* Right side — two dropdowns */}
           <div className="flex items-center gap-2 shrink-0">
             {/* Category */}
-            <div className="relative flex items-center gap-1.5 md:bg-[#f0f2f5] md:dark:bg-zinc-800 md:hover:bg-black/[0.07] md:dark:hover:bg-zinc-700 border border-transparent md:hover:border-black/[0.06] md:dark:hover:border-white/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
-              <span className="text-sm font-semibold text-black dark:text-white tracking-[-0.1px] whitespace-nowrap">
+            <div className="relative flex items-center gap-1.5 hover:bg-black/[0.05] dark:hover:bg-white/[0.06] border border-black/[0.1] dark:border-white/[0.08] px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-150">
+              <span className="text-[13px] font-bold text-black dark:text-white tracking-[-0.1px] whitespace-nowrap">
                 {selectedCategory}
               </span>
-              <HiChevronDown className="text-black/40 dark:text-white/40 text-xl shrink-0" />
+              <HiChevronDown className="text-black/40 dark:text-white/40 text-[18px] shrink-0" />
               <select
                 defaultValue=""
                 onChange={(e) => handleCategory(e.target.value)}
@@ -179,11 +197,11 @@ const FilterBar = () => {
             </div>
 
             {/* Sort */}
-            <div className="relative flex items-center gap-1.5 md:bg-[#f0f2f5] md:dark:bg-zinc-800 md:hover:bg-black/[0.07] md:dark:hover:bg-zinc-700 border border-transparent md:hover:border-black/[0.06] md:dark:hover:border-white/[0.06] rounded-full px-4 py-2 cursor-pointer transition-all duration-150">
-              <span className="text-sm  font-semibold text-black dark:text-white tracking-[-0.1px] whitespace-nowrap">
+            <div className="relative flex items-center gap-1.5 hover:bg-black/[0.05] dark:hover:bg-white/[0.06] border border-black/[0.1] dark:border-white/[0.08] px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-150">
+              <span className="text-[13px] font-bold text-black dark:text-white tracking-[-0.1px] whitespace-nowrap">
                 {sortType}
               </span>
-              <HiChevronDown className="text-black/40 dark:text-white/40 text-xl shrink-0" />
+              <HiChevronDown className="text-black/40 dark:text-white/40 text-[18px] shrink-0" />
               <select
                 defaultValue=""
                 onChange={(e) => handleSort(e.target.value)}
