@@ -54,7 +54,7 @@ export default function IdeaCard({ idea }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-col bg-white dark:bg-zinc-900 border-b-2 md:border-black/[0.06] md:dark:border-white/[0.06]  rounded-none sm:rounded-2xl overflow-hidden transition-all duration-200 md:hover:border-black/20 md:dark:hover:border-white/20">
+    <div className="flex flex-col bg-white dark:bg-zinc-900 border-b-2 border-black/20 sm:border dark:border-white/[0.06]  rounded-none sm:rounded-2xl overflow-hidden transition-all duration-200 sm:hover:border-black/20 sm:dark:hover:border-white/20">
       {/* Author Row */}
       <div className="flex items-center justify-between px-4 pt-4 pb-3">
         <div className="flex items-center gap-2.5">
@@ -117,7 +117,7 @@ export default function IdeaCard({ idea }) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center px-2 py-1 gap-1">
+      <div className="flex items-center justify-between px-2 py-1 gap-1">
         <div className="flex gap-5 flex-row">
           {/* Like */}
           <button className="flex-1 flex items-center justify-center gap-1 text-black/50 dark:text-white/50 md:hover:text-blue-500  md:dark:hover:bg-blue-500/10 py-2.5 rounded-xl transition-all duration-150">
@@ -146,14 +146,16 @@ export default function IdeaCard({ idea }) {
         </div>
 
         {/* View Details */}
-        <Link
-          href={`/ideas/${idea._id}`}
-          className="flex-1 flex items-center justify-center gap-1.5 text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] py-2.5 rounded-xl transition-all duration-150"
-        >
-          <span className="text-[13px] font-normal tracking-[-0.1px]">
-            View Details
-          </span>
-        </Link>
+        <div>
+          <Link
+            href={`/ideas/${idea._id}`}
+            className="flex-1 flex items-center justify-center gap-1.5 text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white py-2.5 rounded-xl transition-all duration-150 hover:underline"
+          >
+            <span className="text-[13px] font-normal tracking-[-0.1px] px-3">
+              View Details
+            </span>
+          </Link>
+        </div>
       </div>
 
       {/* Modal */}

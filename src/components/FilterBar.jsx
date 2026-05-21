@@ -35,8 +35,8 @@ const FilterBar = () => {
   const handleSearch = (query = search) => {
     setShowSuggestions(false);
     const params = new URLSearchParams(searchParams);
-    if (search) {
-      params.set("search", search);
+    if (query) {
+      params.set("search", query);
     } else {
       params.delete("search");
     }
@@ -87,7 +87,7 @@ const FilterBar = () => {
                   }
                   type="text"
                   placeholder="Search ideas..."
-                  className="flex-1 bg-transparent text-[13px] font-normal text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/30 tracking-[-0.1px] outline-none min-w-0"
+                  className="flex-1 bg-transparent text-base font-normal text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/30 tracking-[-0.1px] outline-none min-w-0"
                 />
               </div>
 
@@ -131,7 +131,7 @@ const FilterBar = () => {
                     ) : (
                       <HiSearch className="text-black/20 dark:text-white/20 text-[13px] shrink-0" />
                     )}
-                    <span className="text-[13px] font-normal text-black dark:text-white tracking-[-0.1px] underline">
+                    <span className="text-base font-normal text-black dark:text-white tracking-[-0.1px]">
                       {s.title}
                     </span>
                   </button>

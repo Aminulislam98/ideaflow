@@ -1,6 +1,13 @@
 import FilterBar from "@/components/FilterBar";
 import IdeaCard from "@/components/IdeaCard";
 
+// Fallback string validation to prevent 'undefined' passing into new URL()
+const baseUrl =
+  process.env.NEXT_PUBLIC_CLIENT_URL &&
+  process.env.NEXT_PUBLIC_CLIENT_URL !== "undefined"
+    ? process.env.NEXT_PUBLIC_CLIENT_URL
+    : "http://localhost:3000";
+
 export const metadata = {
   title: "IdeaVault — Discover, Share & Explore Innovative Ideas",
   description:
@@ -27,7 +34,8 @@ export const metadata = {
   creator: "IdeaVault",
   publisher: "IdeaVault",
 
-  metadataBase: new URL(process.env.NEXT_PUBLIC_CLIENT_URL),
+  // FIXED: Using the validated baseline URL string variable
+  metadataBase: new URL(baseUrl),
 
   alternates: {
     canonical: "/ideas",
