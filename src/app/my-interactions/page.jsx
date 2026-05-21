@@ -1,243 +1,154 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import Image from "next/image";
 import Link from "next/link";
-import { HiThumbUp, HiChat, HiBadgeCheck } from "react-icons/hi";
+import { HiThumbUp, HiChat } from "react-icons/hi";
 
-const categoryColors = {
-  FinTech: { bg: "bg-blue-50", text: "text-blue-600" },
-  EdTech: { bg: "bg-violet-50", text: "text-violet-600" },
-  HealthTech: { bg: "bg-green-50", text: "text-green-600" },
-  GreenTech: { bg: "bg-emerald-50", text: "text-emerald-600" },
-  SaaS: { bg: "bg-orange-50", text: "text-orange-600" },
-  AgriTech: { bg: "bg-lime-50", text: "text-lime-600" },
-};
+export async function generateMetadata() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userName = session?.user?.name || "My";
+
+  return {
+    title: `${userName}'s Interactions | IdeaFlow`,
+    description: "View the ideas you have liked and commented on.",
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
+}
 
 export default async function MyInteractionsPage() {
-  // get the logged in user and token
   const { token } = await auth.api.getToken({ headers: await headers() });
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user;
 
-  // fetch commented and liked ideas from backend
+  // fetch from backend
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/my-interaction/${user.id}`,
     { headers: { authorization: `Bearer ${token}` } },
   );
   const data = await res.json();
-  // data has two arrays: data.commentedIdeas and data.likedIdeas
-
-  // step 1 — tag each idea with how the user interacted
-  const commentedWithTag = data.commentedIdeas.map((idea) => ({
-    ...idea,
-    interactionType: "comment",
-  }));
-
-  const likedWithTag = data.likedIdeas.map((idea) => ({
-    ...idea,
-    interactionType: "like",
-  }));
-
-  // step 2 — merge both arrays into one
-  const allIdeas = [...commentedWithTag, ...likedWithTag];
-
-  // step 3 — deduplicate: if same idea appears in both, mark as "both"
-  const seen = {};
-  allIdeas.forEach((idea) => {
-    const key = idea._id.toString();
-    if (seen[key]) {
-      // this idea already exists → user did both like and comment
-      seen[key].interactionType = "both";
-    } else {
-      // first time seeing this idea → just add it
-      seen[key] = { ...idea };
-    }
-  });
-
-  // step 4 — convert the seen object back to an array and shape for UI
-  const interactions = Object.values(seen).map((idea) => ({
-    id: idea._id,
-    type: idea.interactionType, // "comment" | "like" | "both"
-    date: new Date(idea.createdAt).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }),
-    idea: {
-      _id: idea._id,
-      title: idea.title,
-      category: idea.category,
-      banner: idea.imageURL,
-      authorName: idea.author?.name,
-      authorPhoto: idea.author?.photo,
-      likes: idea.likeCount,
-      comments: idea.commentCount,
-    },
-  }));
-
-  // step 5 — count totals for the header
-  const totalLikes = interactions.filter(
-    (i) => i.type === "like" || i.type === "both",
-  ).length;
-
-  const totalComments = interactions.filter(
-    (i) => i.type === "comment" || i.type === "both",
-  ).length;
+  // data.commentedIdeas → ideas user commented on (with comments)
+  // data.likedIdeas     → ideas user liked
 
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] dark:bg-zinc-950 pt-16">
-      <div className="max-w-3xl mx-auto px-5 sm:px-8 py-6 flex flex-col gap-5">
+      <div className="max-w-2xl mx-auto px-5 sm:px-8 py-6 flex flex-col gap-4">
         {/* Page Header */}
         <div className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-[17px] font-semibold text-black dark:text-white tracking-[-0.03em]">
-                My Interactions
-              </h1>
-              <p className="text-[12px] text-black/40 dark:text-white/40 mt-0.5">
-                Ideas you've liked and commented on
-              </p>
-            </div>
-
-            {/* like and comment count badges */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 text-[12px] text-rose-500 bg-rose-50 dark:bg-rose-500/10 px-3 py-1.5 rounded-full">
-                <HiThumbUp className="text-[13px]" />
-                {totalLikes} likes
-              </div>
-              <div className="flex items-center gap-1.5 text-[12px] text-blue-500 bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-full">
-                <HiChat className="text-[13px]" />
-                {totalComments} comments
-              </div>
-            </div>
-          </div>
+          <h1 className="text-[17px] font-semibold text-black dark:text-white tracking-[-0.03em]">
+            My Interactions
+          </h1>
+          <p className="text-[12px] text-black/40 dark:text-white/40 mt-0.5">
+            Ideas you've liked and commented on
+          </p>
         </div>
 
-        {/* Section Label */}
-        <p className="text-[13px] text-black/40 dark:text-white/40 -mb-2">
-          All Interactions
-        </p>
+        {/* ───────────────────────────── */}
+        {/* COMMENTED IDEAS SECTION       */}
+        {/* ───────────────────────────── */}
+        {data.commentedIdeas.length > 0 && (
+          <div className="flex flex-col gap-3">
+            <p className="text-[13px] text-black/40 dark:text-white/40">
+              Ideas you commented on
+            </p>
 
-        {/* Idea Cards */}
-        {interactions.map((item) => {
-          const color = categoryColors[item.idea.category] || {
-            bg: "bg-gray-50",
-            text: "text-gray-600",
-          };
-
-          return (
-            <div
-              key={item.id}
-              className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden"
-            >
-              {/* Top label — shows liked / commented / both */}
+            {data.commentedIdeas.map((idea) => (
               <div
-                className={`flex items-center gap-2 px-4 py-2.5 border-b border-black/[0.04] dark:border-white/[0.04]
-                  ${item.type === "like" ? "bg-rose-50/60 dark:bg-rose-500/10" : ""}
-                  ${item.type === "comment" ? "bg-blue-50/60 dark:bg-blue-500/10" : ""}
-                  ${item.type === "both" ? "bg-purple-50/60 dark:bg-purple-500/10" : ""}
-                `}
+                key={idea._id}
+                className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden"
               >
-                {/* liked only */}
-                {item.type === "like" && (
-                  <>
-                    <HiThumbUp className="text-rose-400 text-[13px]" />
-                    <span className="text-[12px] text-rose-400">
-                      Liked · {item.date}
-                    </span>
-                  </>
-                )}
+                {/* label — You commented */}
+                <div className="flex items-center gap-2 px-4 py-2.5 bg-blue-50/60 dark:bg-blue-500/10 border-b border-black/[0.04] dark:border-white/[0.04]">
+                  <HiChat className="text-blue-400 text-[13px]" />
+                  <span className="text-[12px] text-blue-400">
+                    You commented
+                  </span>
+                </div>
 
-                {/* commented only */}
-                {item.type === "comment" && (
-                  <>
-                    <HiChat className="text-blue-400 text-[13px]" />
-                    <span className="text-[12px] text-blue-400">
-                      Commented · {item.date}
-                    </span>
-                  </>
-                )}
+                {/* idea title */}
+                <div className="px-4 pt-3 pb-2">
+                  <h3 className="text-[14px] font-semibold text-black dark:text-white tracking-[-0.02em]">
+                    {idea.title}
+                  </h3>
+                </div>
 
-                {/* liked and commented both */}
-                {item.type === "both" && (
-                  <>
-                    <HiThumbUp className="text-purple-400 text-[13px]" />
-                    <HiChat className="text-purple-400 text-[13px]" />
-                    <span className="text-[12px] text-purple-400">
-                      Liked & Commented · {item.date}
-                    </span>
-                  </>
-                )}
-              </div>
-
-              {/* Idea author */}
-              <div className="flex items-center justify-between px-4 pt-3 pb-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full relative shrink-0">
-                    <Image
-                      fill
-                      src={item.idea.authorPhoto}
-                      alt={item.idea.authorName}
-                      className="rounded-full object-cover"
-                    />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <p className="text-[13px] font-semibold text-black dark:text-white">
-                      {item.idea.authorName}
+                {/* my comments on this idea */}
+                <div className="px-4 pb-3 flex flex-col gap-2">
+                  {/* 
+                    data.commentedIdeas only has the idea, not the comment text
+                    we need to show the comment — so we filter from the raw comments
+                    but backend doesn't send comments yet, so we show a placeholder
+                    → we need to update backend to send comments too (next step)
+                  */}
+                  <div className="bg-[#f0f2f5] dark:bg-zinc-800 rounded-xl px-4 py-3">
+                    <p className="text-[11px] font-medium text-black/30 dark:text-white/30 mb-1">
+                      Your comment
                     </p>
-                    <HiBadgeCheck className="text-blue-500 text-[13px]" />
+                    <p className="text-[13px] text-black/70 dark:text-white/70 leading-relaxed">
+                      {idea.myComment || "—"}
+                    </p>
                   </div>
                 </div>
 
-                {/* category badge */}
-                <span
-                  className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${color.bg} ${color.text}`}
-                >
-                  {item.idea.category}
-                </span>
+                {/* view button */}
+                <div className="px-4 pb-3">
+                  <Link
+                    href={`/ideas/${idea._id}`}
+                    className="text-[12px] text-black/50 dark:text-white/50 border border-black/10 dark:border-white/10 px-4 py-1.5 rounded-full hover:bg-black/[0.03] transition-all duration-150"
+                  >
+                    View Idea
+                  </Link>
+                </div>
               </div>
+            ))}
+          </div>
+        )}
 
-              {/* Idea title */}
-              <div className="px-4 pb-2">
-                <h3 className="text-[14px] font-semibold text-black dark:text-white">
-                  {item.idea.title}
-                </h3>
-              </div>
+        {/* LIKED IDEAS SECTION           */}
 
-              {/* Idea banner image */}
-              <div className="relative w-full h-[180px] sm:h-[220px]">
-                <Image
-                  fill
-                  src={item.idea.banner}
-                  alt={item.idea.title}
-                  className="object-cover"
-                />
-              </div>
+        {data.likedIdeas.length > 0 && (
+          <div className="flex flex-col gap-3">
+            <p className="text-[13px] text-black/40 dark:text-white/40">
+              Ideas you liked
+            </p>
 
-              {/* Stats and view button */}
-              <div className="flex items-center justify-between px-4 py-2.5 border-t border-black/[0.04] dark:border-white/[0.04]">
-                <div className="flex items-center gap-3">
-                  <span className="text-[12px] text-black/30 dark:text-white/30">
-                    ♥ {item.idea.likes}
-                  </span>
-                  <span className="text-[12px] text-black/30 dark:text-white/30">
-                    💬 {item.idea.comments}
+            {data.likedIdeas.map((idea) => (
+              <div
+                key={idea._id}
+                className="bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden"
+              >
+                {/* label — You liked */}
+                <div className="flex items-center gap-2 px-4 py-2.5 bg-rose-50/60 dark:bg-rose-500/10 border-b border-black/[0.04] dark:border-white/[0.04]">
+                  <HiThumbUp className="text-rose-400 text-[13px]" />
+                  <span className="text-[12px] text-rose-400">
+                    You liked this
                   </span>
                 </div>
 
-                <Link
-                  href={`/ideas/${item.idea._id}`}
-                  className="text-[12px] text-black/50 dark:text-white/50 border border-black/10 dark:border-white/10 px-4 py-1.5 rounded-full hover:bg-black/[0.03] transition-all duration-150"
-                >
-                  View Idea
-                </Link>
-              </div>
-            </div>
-          );
-        })}
+                {/* idea title */}
+                <div className="px-4 py-3">
+                  <h3 className="text-[14px] font-semibold text-black dark:text-white tracking-[-0.02em]">
+                    {idea.title}
+                  </h3>
+                </div>
 
-        {/* Empty state — shows if no interactions */}
-        {interactions.length === 0 && (
+                {/* view button */}
+                <div className="px-4 pb-3">
+                  <Link
+                    href={`/ideas/${idea._id}`}
+                    className="text-[12px] text-black/50 dark:text-white/50 border border-black/10 dark:border-white/10 px-4 py-1.5 rounded-full hover:bg-black/[0.03] transition-all duration-150"
+                  >
+                    View Idea
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Empty state */}
+        {data.commentedIdeas.length === 0 && data.likedIdeas.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
             <p className="text-[32px]">💬</p>
             <p className="text-[15px] font-semibold text-black dark:text-white">

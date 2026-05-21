@@ -5,6 +5,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { HiPencil, HiBadgeCheck, HiLightBulb } from "react-icons/hi";
 
+export async function generateMetadata() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userName = session?.user?.name;
+
+  return {
+    // If the user's name is "John Doe", it will show "John Doe's Ideas | IdeaFlow"
+    // Falls back to "My Ideas" if the session hasn't loaded yet
+    title: userName ? `${userName}'s Ideas | IdeaFlow` : "My Ideas | IdeaFlow",
+    description:
+      "Manage, edit, and track the performance of your shared ideas.",
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
+}
+
 const categoryColors = {
   FinTech: { bg: "bg-blue-50", text: "text-blue-600" },
   EdTech: { bg: "bg-violet-50", text: "text-violet-600" },

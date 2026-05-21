@@ -90,9 +90,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className={`text-[15px] font-bold tracking-[-0.3px] shrink-0 transition-colors duration-300 ${textColor}`}
+          className={`text-base font-bold tracking-[-0.3px] shrink-0 transition-colors duration-300 ${textColor}`}
         >
-          IdeaFlow
+          IdeaVault
         </Link>
 
         {/* Desktop Links */}

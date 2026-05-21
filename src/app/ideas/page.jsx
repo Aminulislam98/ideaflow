@@ -1,6 +1,81 @@
 import FilterBar from "@/components/FilterBar";
 import IdeaCard from "@/components/IdeaCard";
 
+export const metadata = {
+  title: "IdeaVault — Discover, Share & Explore Innovative Ideas",
+  description:
+    "Explore trending startup ideas, creative projects, business concepts, and innovative solutions on IdeaVault. Share your thoughts, discover inspiration, and connect with creators worldwide.",
+
+  keywords: [
+    "startup ideas",
+    "business ideas",
+    "innovation platform",
+    "creative ideas",
+    "entrepreneurship",
+    "project showcase",
+    "idea sharing",
+    "tech ideas",
+    "product ideas",
+    "web app inspiration",
+    "IdeaVault",
+    "founder community",
+    "side projects",
+    "startup community",
+  ],
+
+  authors: [{ name: "IdeaVault Team" }],
+  creator: "IdeaVault",
+  publisher: "IdeaVault",
+
+  metadataBase: new URL(process.env.NEXT_PUBLIC_CLIENT_URL),
+
+  alternates: {
+    canonical: "/ideas",
+  },
+
+  openGraph: {
+    title: "IdeaVault — Discover Innovative Ideas",
+    description:
+      "Browse trending ideas, startup concepts, and creative innovations shared by creators around the world.",
+    url: "/ideas",
+    siteName: "IdeaVault",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "IdeaVault Platform Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "IdeaVault — Explore Creative Ideas",
+    description:
+      "Discover startup ideas, innovations, and inspiring projects from creators worldwide.",
+    images: ["/og-image.png"],
+    creator: "@ideavault",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+
+  category: "technology",
+};
+
 const getIdeasData = async (search = "", category = "", sort = "") => {
   try {
     const res = await fetch(

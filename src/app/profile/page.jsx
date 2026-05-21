@@ -40,16 +40,15 @@ const categoryColors = {
   },
 };
 
-// ✅ Dynamic metadata from session
 export async function generateMetadata() {
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user;
-  if (!user) return { title: "Profile | IdeaFlow" };
+  if (!user) return { title: "Profile | IdeaVault" };
   return {
-    title: `${user.name}'s Profile | IdeaFlow`,
-    description: `View ${user.name}'s startup ideas and activity on IdeaFlow.`,
+    title: `${user.name} | IdeaVault`,
+    description: `View ${user.name}'s startup ideas and activity on IdeaVault.`,
     openGraph: {
-      title: `${user.name} on IdeaFlow`,
+      title: `${user.name} on IdeaVault`,
       description: `Explore ideas shared by ${user.name}`,
       images: user.image ? [{ url: user.image }] : [],
     },
