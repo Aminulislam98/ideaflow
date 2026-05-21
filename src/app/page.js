@@ -1,4 +1,6 @@
 import BannerSwiper from "@/components/Banner";
+import HowItWorks from "@/components/HowItWorks";
+import Testimonials from "@/components/Testomonials";
 import TrendingIdeas from "@/components/TrendingIdeas";
 export const metadata = {
   title: "Home",
@@ -35,6 +37,8 @@ export default function Home() {
     <>
       <BannerSwiper />
       <TrendingIdeas />
+      <HowItWorks />
+      <Testimonials />
     </>
   );
 }
