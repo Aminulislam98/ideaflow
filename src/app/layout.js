@@ -5,6 +5,8 @@ import Footer from "@/components/layout/Footer";
 import GlobalLoader from "@/components/Loader/GlobalLoader";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/components/ThemeProvider";
+import SmoothScroll from "@/components/SmoothScroll";
+import ProgressBar from "@/components/ProgressBar";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -68,7 +70,10 @@ export default function RootLayout({ children }) {
         <Providers>
           <GlobalLoader />
           <Navbar user={null} />
-          <main>{children}</main>
+          <ProgressBar />
+          <SmoothScroll>
+            <main>{children}</main>
+          </SmoothScroll>
           <Toaster />
           <Footer />
         </Providers>

@@ -92,8 +92,8 @@ const FilterBar = () => {
         <div className="max-w-6xl mx-auto px-2 sm:px-8 py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
           {/* Search */}
           <div className="relative flex-1 min-w-0">
-            <div className="flex items-center min-w-0 border border-black/[0.1] dark:border-white/[0.08] rounded-xl overflow-hidden bg-white dark:bg-zinc-950 shadow-[inset_0_1px_3px_rgb(0,0,0,0.06)] dark:shadow-none">
-              <div className="flex items-center min-w-0 border border-black/[0.1] dark:border-white/[0.08] focus-within:border-blue-400 dark:focus-within:border-blue-500 rounded-xl overflow-hidden bg-white dark:bg-zinc-950 shadow-[inset_0_1px_3px_rgb(0,0,0,0.06)] dark:shadow-none transition-colors duration-150">
+            <div className="flex items-center min-w-0 border border-black/[0.1] dark:border-white/8 rounded-xl overflow-hidden bg-white dark:bg-zinc-950 shadow-[inset_0_1px_3px_rgb(0,0,0,0.06)] dark:shadow-none">
+              <div className="flex items-center gap-3 flex-1 px-4 py-2.5 min-w-0">
                 <input
                   value={search}
                   onChange={(e) => {
