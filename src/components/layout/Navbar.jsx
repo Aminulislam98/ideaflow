@@ -123,14 +123,15 @@ export default function Navbar() {
           <div className="flex items-center gap-1 sm:gap-2 ml-auto z-10">
             {/* Notification bell — only when logged in */}
             {user && (
-              <button
+              <Link
+                href="/my-interactions"
                 aria-label="Notifications"
                 className="flex items-center justify-center w-10 h-10 rounded-xl text-black dark:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.06] transition-colors duration-150 relative"
               >
                 <HiOutlineBell className="text-[28px]" />
                 {/* Unread dot — remove if not needed */}
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-zinc-950" />
-              </button>
+              </Link>
             )}
 
             {/* Avatar / Auth */}

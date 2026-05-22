@@ -75,7 +75,7 @@ const NewCommentOnPost = ({ idea }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
+    <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5">
       {/* Header Info */}
       <div className="flex items-center gap-2 mb-5">
         <HiChat className="text-[16px] text-black dark:text-white" />
