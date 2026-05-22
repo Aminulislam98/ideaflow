@@ -193,7 +193,7 @@ export default function CommentCard({
                 onChange={(e) => setEditText(e.target.value)}
                 rows={3}
                 autoFocus
-                className="w-full bg-white dark:bg-zinc-700 text-sm text-black dark:text-zinc-100 rounded-xl px-2 py-1.5 resize-none outline-none border border-black/10 dark:border-white/10 focus:border-blue-400 transition-colors"
+                className="w-full bg-white dark:bg-zinc-700 text-base text-black dark:text-zinc-100 rounded-xl px-2 py-1.5 resize-none outline-none border border-black/10 dark:border-white/10 focus:border-blue-400 transition-colors"
               />
             ) : (
               <p className="text-base font-normal text-black dark:text-zinc-200 leading-relaxed break-words mt-0">
