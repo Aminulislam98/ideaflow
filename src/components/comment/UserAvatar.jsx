@@ -6,7 +6,10 @@ const UserAvatar = ({ user, author, size = 32 }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const triggerMounted = async () => {
+      setMounted(true);
+    };
+    triggerMounted();
   }, []);
 
   const name = user?.name ?? author?.name ?? "";
@@ -31,7 +34,7 @@ const UserAvatar = ({ user, author, size = 32 }) => {
           className="font-semibold text-black/50"
           style={{ fontSize: size * 0.375 }}
         >
-          {initial}
+          {mounted ? initial : ""}
         </span>
       )}
     </div>

@@ -13,6 +13,7 @@ import NewCommentOnPost from "@/components/comment/Comment";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import LikeButton from "@/components/buttons/LikeButton";
+import IdeaShareButton from "@/components/buttons/IdeaShareButton";
 
 export async function generateMetadata({ params }) {
   const { token } = await auth.api.getToken({ headers: await headers() });
@@ -81,10 +82,7 @@ export default async function IdeaDetailsPage({ params }) {
                 </span>
               </button> */}
               <LikeButton idea={idea} user={user} />
-              <button className="flex items-center gap-1.5 text-[13px] font-medium text-black dark:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.05] border border-black/10 dark:border-white/10 px-4 py-2 rounded-full transition-all duration-150 tracking-[-0.1px]">
-                <HiShare className="text-[15px]" />
-                Share
-              </button>
+              <IdeaShareButton idea={idea} />
             </div>
           </div>
         </div>

@@ -4,21 +4,16 @@ import { HiTrash, HiX } from "react-icons/hi";
 import { ImSpinner2 } from "react-icons/im";
 import toast from "react-hot-toast";
 import UserAvatar from "./UserAvatar";
-import { AiOutlineDelete, AiTwotoneDelete } from "react-icons/ai";
 
 // ── Delete Confirmation Modal ──────────────────────────────────────────────
 function DeleteConfirmModal({ onConfirm, onCancel, isDeleting }) {
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
         onClick={onCancel}
       />
-
-      {/* Modal box */}
       <div className="relative w-full max-w-[400px] bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-black/[0.06] dark:border-white/[0.06]">
           <h2 className="text-[16px] font-black text-black dark:text-white tracking-[-0.3px]">
             Delete Comment?
@@ -30,8 +25,6 @@ function DeleteConfirmModal({ onConfirm, onCancel, isDeleting }) {
             <HiX className="text-[15px] text-black dark:text-white" />
           </button>
         </div>
-
-        {/* Body */}
         <div className="px-4 py-4">
           <p className="text-[14px] text-black/70 dark:text-white/60 leading-relaxed tracking-[-0.1px]">
             Are you sure you want to permanently delete this comment? This
@@ -43,8 +36,6 @@ function DeleteConfirmModal({ onConfirm, onCancel, isDeleting }) {
             .
           </p>
         </div>
-
-        {/* Actions */}
         <div className="flex gap-2 px-4 pb-4">
           <button
             onClick={onCancel}
@@ -77,12 +68,21 @@ function DeleteConfirmModal({ onConfirm, onCancel, isDeleting }) {
 }
 
 // ── CommentCard ────────────────────────────────────────────────────────────
-export default function CommentCard({ comment, currentUser, onDelete }) {
+export default function CommentCard({
+  comment,
+  currentUser,
+  onDelete,
+  onEdit,
+}) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(comment?.text);
+  const [isSaving, setIsSaving] = useState(false);
 
   const isOwner = currentUser?.id === comment?.author?.userId;
 
+  // ── Delete ──
   const executeDelete = async () => {
     setIsDeleting(true);
     try {
@@ -90,7 +90,6 @@ export default function CommentCard({ comment, currentUser, onDelete }) {
         `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${comment._id}`,
         { method: "DELETE" },
       );
-
       if (res.ok) {
         toast.success("Comment deleted");
         setShowConfirm(false);
@@ -107,9 +106,39 @@ export default function CommentCard({ comment, currentUser, onDelete }) {
     }
   };
 
+  // ── Edit (Save) ──
+  const executeEdit = async () => {
+    if (!editText.trim() || editText === comment?.text) {
+      setIsEditing(false);
+      return;
+    }
+    setIsSaving(true);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${comment._id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: editText }),
+        },
+      );
+      if (res.ok) {
+        toast.success("Comment updated");
+        setIsEditing(false);
+        onEdit(comment._id, editText);
+      } else {
+        toast.error("Failed to update comment");
+      }
+    } catch (err) {
+      console.error("Edit error:", err);
+      toast.error("Something went wrong");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <>
-      {/* Delete confirmation modal */}
       {showConfirm && (
         <DeleteConfirmModal
           onConfirm={executeDelete}
@@ -122,33 +151,89 @@ export default function CommentCard({ comment, currentUser, onDelete }) {
         {/* Avatar */}
         <UserAvatar
           user={{ image: comment?.author?.photo, name: comment?.author?.name }}
-          size={32}
+          size={36}
         />
 
         {/* Bubble */}
         <div className="flex-1 min-w-0">
-          <div className="bg-[#f0f2f5] dark:bg-zinc-800/60 rounded-2xl px-3 py-2.5 inline-block max-w-full">
+          <div className="bg-[#f0f2f5] dark:bg-zinc-800/60 rounded-2xl px-3 py-2.5 inline-block max-w-full w-full">
             <div className="flex items-center gap-2 mb-0.5">
               <span className="text-sm font-semibold text-black dark:text-white tracking-[-0.1px]">
                 {comment?.author?.name || "Anonymous"}
               </span>
             </div>
-            <p className="text-sm font-normal text-black dark:text-zinc-200 leading-relaxed wrap-break-word mt-0 ">
-              {comment?.text}
-            </p>
+
+            {/* ✅ isEditing হলে textarea,  text */}
+            {isEditing ? (
+              <textarea
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                rows={3}
+                autoFocus
+                className="w-full bg-white dark:bg-zinc-700 text-sm text-black dark:text-zinc-100 rounded-xl px-2 py-1.5 resize-none outline-none border border-black/10 dark:border-white/10 focus:border-blue-400 transition-colors"
+              />
+            ) : (
+              <p className="text-sm font-normal text-black dark:text-zinc-200 leading-relaxed break-words mt-0">
+                {comment?.text}
+              </p>
+            )}
           </div>
 
-          {/* Action row */}
-          <div className="flex items-center gap-3 mt-1 px-1.5">
-            {isOwner && (
+          {/* Action Buttons */}
+          <div className="flex items-center gap-1 mt-1 px-1.5">
+            {/* Delete — শুধু isEditing false হলে দেখাবে */}
+            {isOwner && !isEditing && (
               <button
                 onClick={() => setShowConfirm(true)}
                 disabled={isDeleting}
-                className="flex items-center gap-1 text-sm font-medium text-red-500/70 hover:text-red-600 disabled:opacity-40 transition-colors duration-150 border border-red-500 px-1 rounded-xl"
+                className="text-base font-medium text-black/60 hover:text-red-600 disabled:opacity-40 transition-colors duration-150 px-1 rounded-xl"
               >
-                <AiOutlineDelete className="text-xl" />
                 {isDeleting ? "Deleting..." : "Delete"}
               </button>
+            )}
+
+            {/* Edit / Save / Cancel */}
+            {isOwner && (
+              <>
+                {isEditing ? (
+                  <>
+                    <button
+                      onClick={executeEdit}
+                      disabled={isSaving}
+                      className="text-base font-medium text-blue-600 hover:text-blue-700 disabled:opacity-40 transition-colors duration-150 px-1 rounded-xl flex items-center gap-1"
+                    >
+                      {isSaving ? (
+                        <>
+                          <ImSpinner2 className="animate-spin text-sm" />
+                          Saving...
+                        </>
+                      ) : (
+                        "Save"
+                      )}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditText(comment?.text);
+                      }}
+                      disabled={isSaving}
+                      className="text-base font-medium text-black/60 hover:text-black disabled:opacity-40 transition-colors duration-150 px-1 rounded-xl"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsEditing(true);
+                      setEditText(comment?.text);
+                    }}
+                    className="text-base font-medium text-black/60 hover:text-yellow-700 transition-colors duration-150 px-1 rounded-xl"
+                  >
+                    Edit
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>

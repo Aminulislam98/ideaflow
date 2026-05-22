@@ -3,13 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import {
-  HiThumbUp,
-  HiChat,
-  HiBadgeCheck,
-  HiPaperAirplane,
-  HiX,
-} from "react-icons/hi";
+import { HiPaperAirplane } from "react-icons/hi";
 import { ImSpinner2 } from "react-icons/im";
 import { Modal } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
@@ -17,7 +11,6 @@ import CommentCard from "@/components/comment/CommentCard";
 import UserAvatar from "@/components/comment/UserAvatar";
 import { MdOutlineModeComment, MdVerified } from "react-icons/md";
 import { LuThumbsUp } from "react-icons/lu";
-import { IoClose } from "react-icons/io5";
 
 export default function IdeaCard({ idea }) {
   const { data: session } = authClient.useSession();
@@ -28,9 +21,12 @@ export default function IdeaCard({ idea }) {
 
   // Re-check liked state once session loads (user is null on first render)
   useEffect(() => {
-    if (user?.id) {
-      setLiked(idea.likes?.includes(user.id) ?? false);
-    }
+    const checkUser = async () => {
+      if (user?.id) {
+        setLiked(idea.likes?.includes(user.id) ?? false);
+      }
+    };
+    checkUser();
   }, [user?.id]);
 
   const handleLike = async () => {
@@ -55,29 +51,31 @@ export default function IdeaCard({ idea }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [commentCount, setCommentCount] = useState(idea.commentCount || 0);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch comments when modal opens
   useEffect(() => {
-    if (!modalOpen || !idea?._id) return;
+    if (!idea?._id) return;
+
     const fetchComments = async () => {
       setFetching(true);
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${idea._id}`,
         );
-        if (!res.ok) throw new Error("Failed to load comments");
-        setComments(await res.json());
+        const data = await res.json();
+        setComments(data);
+        setCommentCount(data.length);
       } catch (err) {
-        console.error("Error loading comments:", err);
+        console.error(err);
       } finally {
         setFetching(false);
       }
     };
     fetchComments();
-  }, [modalOpen, idea?._id]);
+  }, [idea?._id]);
 
   const handleAddComment = async () => {
     if (!newComment.trim() || !user) return;
@@ -101,7 +99,10 @@ export default function IdeaCard({ idea }) {
       const updated = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${idea._id}`,
       );
-      setComments(await updated.json());
+
+      const updatedData = await updated.json();
+      setComments(updatedData);
+      setCommentCount(updatedData.length);
       setNewComment("");
     } catch (err) {
       console.error("Comment error:", err);
@@ -113,6 +114,13 @@ export default function IdeaCard({ idea }) {
 
   const handleDeleteCommentState = (commentId) => {
     setComments((prev) => prev.filter((c) => c._id !== commentId));
+    setCommentCount((prev) => prev - 1);
+  };
+
+  const handleEditCommentState = (commentId, newText) => {
+    setComments((prev) =>
+      prev.map((c) => (c._id === commentId ? { ...c, text: newText } : c)),
+    );
   };
 
   return (
@@ -200,7 +208,7 @@ export default function IdeaCard({ idea }) {
             <span
               className={
                 liked
-                  ? "text-blue-400 text-base"
+                  ? "text-[#65686c] text-base"
                   : "text-[#65686c] dark:text-white/40 text-base"
               }
             >
@@ -215,7 +223,7 @@ export default function IdeaCard({ idea }) {
           >
             <MdOutlineModeComment className="text-xl shrink-0 text-[#65686c]" />
             <span className="text-base font-semibold text-[#65686c] dark:text-white/40">
-              {idea.commentCount}
+              {commentCount}
             </span>
           </button>
         </div>
@@ -238,8 +246,8 @@ export default function IdeaCard({ idea }) {
             <Modal.Dialog className="!p-0 w-full h-[100dvh] sm:h-auto sm:max-h-[90vh] sm:w-[560px] sm:max-w-[calc(100vw-32px)] flex flex-col m-0 rounded-none sm:rounded-2xl overflow-hidden shadow-none">
               {/* Header */}
               <div className="flex items-center px-3 justify-between py-3 border-b border-black/[0.06] dark:border-white/[0.06] bg-white dark:bg-zinc-900 shrink-0">
-                <Modal.CloseTrigger className="bg-white mr-2!">
-                  <div className="text-base font-semibold text-black">
+                <Modal.CloseTrigger className="bg-none  mr-2!">
+                  <div className="text-base font-semibold text-black dark:text-white">
                     Close
                   </div>
                 </Modal.CloseTrigger>
@@ -298,7 +306,9 @@ export default function IdeaCard({ idea }) {
 
                 {/* Banner */}
                 <div className="w-full">
-                  <img
+                  <Image
+                    width={600}
+                    height={400}
                     src={idea.imageURL}
                     alt={idea.title}
                     className="w-full object-contain"
@@ -312,18 +322,15 @@ export default function IdeaCard({ idea }) {
                     <button
                       onClick={handleLike}
                       className={`flex-1 flex items-center justify-center gap-1 py-2.5 rounded-xl transition-all duration-150 text-[13px] font-semibold tracking-[-0.1px]
-              ${
-                liked
-                  ? "text-blue-500"
-                  : "text-black/50 dark:text-white/50 md:hover:text-blue-500"
-              }`}
+                        ${
+                          liked
+                            ? "text-blue-500"
+                            : "text-black/50 dark:text-white/50 md:hover:text-blue-500"
+                        }`}
                     >
                       <LuThumbsUp
                         className={`text-xl ${liked ? "text-blue-500" : "text-[#65686c]"}`}
                       />
-                      {/* <span className="font-normal hidden sm:inline">
-              {liked ? "Liked" : "Like"}
-            </span> */}
                       <span
                         className={
                           liked
@@ -342,7 +349,7 @@ export default function IdeaCard({ idea }) {
                     >
                       <MdOutlineModeComment className="text-xl shrink-0 text-[#65686c]" />
                       <span className="text-base font-semibold text-[#65686c] dark:text-white/40">
-                        {idea.commentCount}
+                        {commentCount}
                       </span>
                     </button>
                   </div>
@@ -352,7 +359,7 @@ export default function IdeaCard({ idea }) {
                     href={`/ideas/${idea._id}`}
                     className="flex items-center justify-center gap-1.5 text-black dark:text-white/50 hover:text-black dark:hover:text-white py-2.5 rounded-xl transition-all duration-150 hover:underline"
                   >
-                    <span className="text-base text-[#65686c] font-normal tracking-[-0.1px] px-3 border rounded-md ">
+                    <span className="text-base text-blue-600 font-semibold tracking-[-0.1px] px-3 ">
                       View Details
                     </span>
                   </Link>
@@ -371,6 +378,7 @@ export default function IdeaCard({ idea }) {
                         comment={comment}
                         currentUser={user}
                         onDelete={handleDeleteCommentState}
+                        onEdit={handleEditCommentState}
                       />
                     ))
                   ) : (

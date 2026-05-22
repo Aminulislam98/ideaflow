@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { HiChat, HiPaperAirplane } from "react-icons/hi";
+import { HiPaperAirplane } from "react-icons/hi";
 import { ImSpinner2 } from "react-icons/im";
 import { authClient } from "@/lib/auth-client";
 import UserAvatar from "./UserAvatar";
 import CommentCard from "./CommentCard";
+import { MdOutlineModeComment } from "react-icons/md";
 
 const NewCommentOnPost = ({ idea }) => {
   const { data: session } = authClient.useSession();
@@ -15,7 +16,6 @@ const NewCommentOnPost = ({ idea }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch comments on component mount or idea change
   useEffect(() => {
     if (!idea?._id) return;
     const fetchComments = async () => {
@@ -32,7 +32,6 @@ const NewCommentOnPost = ({ idea }) => {
     fetchComments();
   }, [idea?._id]);
 
-  // Handle posting a brand new comment
   const handleAddComment = async () => {
     if (!newComment.trim() || !user) return;
     try {
@@ -53,7 +52,6 @@ const NewCommentOnPost = ({ idea }) => {
       });
       if (!res.ok) throw new Error("Failed to post comment");
 
-      // Refresh list from the backend database directly
       const updated = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/comment/${idea._id}`,
       );
@@ -67,30 +65,33 @@ const NewCommentOnPost = ({ idea }) => {
     }
   };
 
-  // Optimistically remove the comment from local array state when deleted
   const handleDeleteCommentState = (commentId) => {
-    setComments((prevComments) =>
-      prevComments.filter((comment) => comment._id !== commentId),
+    setComments((prev) => prev.filter((c) => c._id !== commentId));
+  };
+
+  // ✅  — edited comment এর text locally update করবে
+  const handleEditCommentState = (commentId, newText) => {
+    setComments((prev) =>
+      prev.map((c) => (c._id === commentId ? { ...c, text: newText } : c)),
     );
   };
 
   return (
     <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5">
-      {/* Header Info */}
+      {/* Header */}
       <div className="flex items-center gap-2 mb-5">
-        <HiChat className="text-[16px] text-black dark:text-white" />
+        <MdOutlineModeComment className="text-xl text-black dark:text-white" />
         <h2 className="text-[15px] font-bold text-black dark:text-white tracking-[-0.02em]">
           Comments
         </h2>
-        <span className="text-[13px] font-normal text-black/40 dark:text-white/40 tracking-[-0.1px]">
+        <span className="text-base font-normal text-black/40 dark:text-white/40 tracking-[-0.1px]">
           {comments.length}
         </span>
       </div>
 
-      {/* Write Input Area */}
+      {/* Input Area */}
       <div className="flex items-center gap-3 mb-5" suppressHydrationWarning>
-        <UserAvatar user={user} size={32} />
-
+        <UserAvatar user={user} size={42} />
         <div className="flex-1 flex items-center bg-[#f0f2f5] dark:bg-zinc-800 rounded-full px-4 py-2.5 gap-2">
           <input
             type="text"
@@ -99,7 +100,7 @@ const NewCommentOnPost = ({ idea }) => {
             onKeyDown={(e) => e.key === "Enter" && handleAddComment()}
             placeholder="Write a comment..."
             disabled={loading}
-            className="flex-1 bg-transparent text-[13px] font-normal text-black dark:text-white placeholder:text-black/40 dark:placeholder:text-white/40 tracking-[-0.1px] outline-none disabled:opacity-50"
+            className="flex-1 bg-transparent text-base font-normal text-black dark:text-white placeholder:text-black/40 dark:placeholder:text-white/40 tracking-[-0.1px] outline-none disabled:opacity-50"
           />
           <button
             onClick={handleAddComment}
@@ -109,7 +110,7 @@ const NewCommentOnPost = ({ idea }) => {
             {loading ? (
               <ImSpinner2 className="text-[15px] animate-spin" />
             ) : (
-              <HiPaperAirplane className="text-[15px] rotate-90" />
+              <HiPaperAirplane className="text-xl text-blue-500 rotate-90" />
             )}
           </button>
         </div>
@@ -119,7 +120,7 @@ const NewCommentOnPost = ({ idea }) => {
 
       <div className="h-px bg-black/[0.06] dark:bg-white/[0.06] mb-4" />
 
-      {/* Render Comment List Loop */}
+      {/* Comment List */}
       <div className="flex flex-col gap-5">
         {comments.map((comment) => (
           <CommentCard
@@ -127,6 +128,7 @@ const NewCommentOnPost = ({ idea }) => {
             comment={comment}
             currentUser={user}
             onDelete={handleDeleteCommentState}
+            onEdit={handleEditCommentState}
           />
         ))}
         {comments.length === 0 && (
