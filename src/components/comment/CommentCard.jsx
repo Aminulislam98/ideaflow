@@ -137,6 +137,29 @@ export default function CommentCard({
     }
   };
 
+  // calculating time and showing
+  const getRelativeTime = (dateString) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffMs = now - date;
+    const diffSecs = Math.floor(diffMs / 1000);
+    const diffMins = Math.floor(diffSecs / 60);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
+
+    if (diffSecs < 60) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffWeeks < 4) return `${diffWeeks}w ago`;
+    if (diffMonths < 12) return `${diffMonths}mo ago`;
+    return `${diffYears}y ago`;
+  };
+
   return (
     <>
       {showConfirm && (
@@ -163,7 +186,7 @@ export default function CommentCard({
               </span>
             </div>
 
-            {/* ✅ isEditing হলে textarea,  text */}
+            {/* isEditing হলে textarea,  text */}
             {isEditing ? (
               <textarea
                 value={editText}
@@ -173,20 +196,23 @@ export default function CommentCard({
                 className="w-full bg-white dark:bg-zinc-700 text-sm text-black dark:text-zinc-100 rounded-xl px-2 py-1.5 resize-none outline-none border border-black/10 dark:border-white/10 focus:border-blue-400 transition-colors"
               />
             ) : (
-              <p className="text-sm font-normal text-black dark:text-zinc-200 leading-relaxed break-words mt-0">
+              <p className="text-base font-normal text-black dark:text-zinc-200 leading-relaxed break-words mt-0">
                 {comment?.text}
               </p>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-1 mt-1 px-1.5">
+          <div className="flex items-center gap-1.5 mt-1 px-1.5">
+            <span className="text-xs font-semibold  text-black/60 dark:text-white/30 ">
+              {comment?.createdAt ? getRelativeTime(comment.createdAt) : ""}
+            </span>
             {/* Delete — শুধু isEditing false হলে দেখাবে */}
             {isOwner && !isEditing && (
               <button
                 onClick={() => setShowConfirm(true)}
                 disabled={isDeleting}
-                className="text-base font-medium text-black/60 hover:text-red-600 disabled:opacity-40 transition-colors duration-150 px-1 rounded-xl"
+                className="text-xs font-semibold text-black/60 hover:text-red-600 disabled:opacity-40 transition-colors duration-150 px-1 rounded-xl hover:underline"
               >
                 {isDeleting ? "Deleting..." : "Delete"}
               </button>
@@ -228,7 +254,7 @@ export default function CommentCard({
                       setIsEditing(true);
                       setEditText(comment?.text);
                     }}
-                    className="text-base font-medium text-black/60 hover:text-yellow-700 transition-colors duration-150 px-1 rounded-xl"
+                    className="text-xs font-semibold text-black/60  transition-colors duration-150 px-1 rounded-xl hover:underline"
                   >
                     Edit
                   </button>

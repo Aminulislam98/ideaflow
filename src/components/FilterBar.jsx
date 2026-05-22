@@ -93,7 +93,7 @@ const FilterBar = () => {
           {/* Search */}
           <div className="relative flex-1 min-w-0">
             <div className="flex items-center min-w-0 border border-black/[0.1] dark:border-white/[0.08] rounded-xl overflow-hidden bg-white dark:bg-zinc-950 shadow-[inset_0_1px_3px_rgb(0,0,0,0.06)] dark:shadow-none">
-              <div className="flex items-center gap-3 flex-1 px-4 py-2.5 min-w-0">
+              <div className="flex items-center min-w-0 border border-black/[0.1] dark:border-white/[0.08] focus-within:border-blue-400 dark:focus-within:border-blue-500 rounded-xl overflow-hidden bg-white dark:bg-zinc-950 shadow-[inset_0_1px_3px_rgb(0,0,0,0.06)] dark:shadow-none transition-colors duration-150">
                 <input
                   value={search}
                   onChange={(e) => {
@@ -107,7 +107,7 @@ const FilterBar = () => {
                   }
                   type="text"
                   placeholder="Search ideas..."
-                  className="flex-1 bg-transparent text-[14px] font-semibold text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/30 tracking-[-0.1px] outline-none min-w-0"
+                  className="flex-1 bg-transparent text-base font-semibold text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/30 tracking-[-0.1px] outline-none min-w-0"
                 />
               </div>
 

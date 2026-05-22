@@ -122,6 +122,28 @@ export default function IdeaCard({ idea }) {
       prev.map((c) => (c._id === commentId ? { ...c, text: newText } : c)),
     );
   };
+  // calculation the date
+  const getRelativeTime = (dateString) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffMs = now - date;
+    const diffSecs = Math.floor(diffMs / 1000);
+    const diffMins = Math.floor(diffSecs / 60);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
+
+    if (diffSecs < 60) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffWeeks < 4) return `${diffWeeks}w ago`;
+    if (diffMonths < 12) return `${diffMonths}mo ago`;
+    return `${diffYears}y ago`;
+  };
 
   return (
     <div className="flex flex-col bg-white dark:bg-zinc-900 border-b-2 border-black/15 sm:border dark:border-white/20 rounded-none sm:rounded-2xl overflow-hidden transition-all duration-200 sm:hover:border-black/20 sm:dark:hover:border-white/20">
@@ -144,11 +166,7 @@ export default function IdeaCard({ idea }) {
               <MdVerified className="text-blue-500 text-[13px] shrink-0" />
             </div>
             <p className="text-xs font-semibold text-black/60 dark:text-white/30 tracking-[-0.1px] mt-0.5">
-              {new Date(idea.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
+              {getRelativeTime(idea.createdAt)}
             </p>
           </div>
         </div>
