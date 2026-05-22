@@ -117,7 +117,7 @@ export default async function ProfilePage() {
 
             {/* Edit Profile button */}
             <Link
-              href="/settings"
+              href="/updateProfile"
               className="flex items-center gap-1.5 shrink-0 text-[13px] font-black text-black dark:text-white bg-black/[0.06] dark:bg-white/[0.08] hover:bg-black/10 dark:hover:bg-white/[0.12] px-4 py-2 rounded-xl transition-colors duration-150 tracking-[-0.1px]"
             >
               <HiPencil className="text-[13px]" />
