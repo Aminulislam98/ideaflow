@@ -36,10 +36,10 @@ export default async function IdeaDetailsPage({ params }) {
   const idea = await res.json();
 
   return (
-    <div className="min-h-screen w-full bg-[#f0f2f5] dark:bg-zinc-950 pt-14">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-6">
+    <div className="min-h-screen w-full bg-[#f0f2f5] dark:bg-zinc-950 pt-8 sm:pt-13">
+      <div className="max-w-6xl mx-auto  sm:px-8 py-6">
         {/* Banner */}
-        <div className="relative w-full h-[260px] sm:h-[340px] lg:h-[400px] overflow-hidden rounded-2xl mb-4">
+        <div className="relative w-full h-[260px] sm:h-[340px] lg:h-[400px] overflow-hidden sm:rounded-2xl sm:mb-4">
           <Image
             fill
             src={idea.imageURL}
@@ -59,7 +59,7 @@ export default async function IdeaDetailsPage({ params }) {
         </div>
 
         {/* Title + Meta */}
-        <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl px-5 py-4 mb-5">
+        <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl px-5 py-4 sm:mb-5">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               <span className="inline-block text-[11px] font-medium tracking-[0.5px] uppercase text-black/40 dark:text-white/40 mb-2">
@@ -90,11 +90,11 @@ export default async function IdeaDetailsPage({ params }) {
         </div>
 
         {/* Body */}
-        <div className="flex flex-col lg:flex-row gap-5 items-start">
+        <div className="flex flex-col lg:flex-row sm:gap-5 items-start ">
           {/* LEFT */}
-          <div className="flex-1 min-w-0 flex flex-col gap-4">
+          <div className="flex-1 min-w-0 flex flex-col sm:gap-3.5 sm:mb-5">
             {/* Author */}
-            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-4">
+            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-4">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-full relative shrink-0">
                   <Image
@@ -128,8 +128,8 @@ export default async function IdeaDetailsPage({ params }) {
             </div>
 
             {/* Detailed Description */}
-            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
-              <h2 className="text-[15px] font-bold text-black dark:text-white tracking-[-0.02em] mb-3">
+            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5 ">
+              <h2 className="text-[15px] font-bold text-black dark:text-white tracking-[-0.02em] mb-3 m:gap-4">
                 About this idea
               </h2>
               <p className="text-[13.5px] font-normal text-black dark:text-white leading-relaxed tracking-[-0.1px]">
@@ -138,8 +138,8 @@ export default async function IdeaDetailsPage({ params }) {
             </div>
 
             {/* Problem + Solution */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+              <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 rounded-full bg-red-50 dark:bg-red-500/10 flex items-center justify-center shrink-0">
                     <span className="text-red-500 text-[13px]">⚠</span>
@@ -153,7 +153,7 @@ export default async function IdeaDetailsPage({ params }) {
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
+              <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 rounded-full bg-green-50 dark:bg-green-500/10 flex items-center justify-center shrink-0">
                     <HiLightBulb className="text-green-500 text-[14px]" />
@@ -173,9 +173,9 @@ export default async function IdeaDetailsPage({ params }) {
           </div>
 
           {/* RIGHT — Sticky Sidebar */}
-          <div className="w-full lg:w-[280px] shrink-0 flex flex-col gap-4 lg:sticky lg:top-[72px]">
+          <div className="w-full lg:w-[280px] shrink-0 flex flex-col sm:gap-3.5 lg:sticky lg:top-[72px] ">
             {/* Stats */}
-            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
+            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5">
               <p className="text-[14px] font-bold text-black dark:text-white tracking-[-0.1px] mb-4">
                 Stats
               </p>
@@ -201,7 +201,7 @@ export default async function IdeaDetailsPage({ params }) {
             </div>
 
             {/* Details */}
-            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
+            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5">
               <p className="text-[14px] font-bold text-black dark:text-white tracking-[-0.1px] mb-4">
                 Details
               </p>
@@ -249,7 +249,7 @@ export default async function IdeaDetailsPage({ params }) {
             </div>
 
             {/* Tags */}
-            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
+            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-3">
                 <HiTag className="text-[14px] text-black dark:text-white" />
                 <p className="text-[14px] font-bold text-black dark:text-white tracking-[-0.1px]">
@@ -269,7 +269,7 @@ export default async function IdeaDetailsPage({ params }) {
             </div>
 
             {/* Author Card */}
-            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-5">
+            <div className="bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.08] sm:rounded-2xl p-5">
               <p className="text-[14px] font-bold text-black dark:text-white tracking-[-0.1px] mb-4">
                 Posted by
               </p>
@@ -299,7 +299,7 @@ export default async function IdeaDetailsPage({ params }) {
                   </p>
                 </div>
               </div>
-              <button className="w-full text-[13px] font-medium text-black dark:text-white border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] py-2 rounded-full transition-all duration-150 tracking-[-0.1px]">
+              <button className="w-full text-[13px] font-medium text-black dark:text-white border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] py-2 sm:rounded-full transition-all duration-150 tracking-[-0.1px]">
                 View Profile
               </button>
             </div>
