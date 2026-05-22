@@ -11,7 +11,6 @@ import {
   HiOutlineBell,
   HiSun,
   HiMoon,
-  HiOutlineLogout,
 } from "react-icons/hi";
 import { RiMenuFold2Line, RiCloseLargeLine } from "react-icons/ri";
 import { LogoutModal } from "../buttons/LogoutButton";
@@ -36,6 +35,29 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
   const pathName = usePathname();
   const router = useRouter();
+
+  // scrolling
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < lastScrollY.current) {
+        // উপরে যাচ্ছে → দেখাও
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY.current && currentScrollY > 60) {
+        // নিচে যাচ্ছে এবং একটু scroll হয়েছে → লুকাও
+        setVisible(false);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -69,7 +91,11 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="w-full fixed top-0 left-0 right-0 z-50 bg-white dark:bg-zinc-950 border-b border-black/[0.08] dark:border-white/[0.07]">
+      <nav
+        className={`w-full fixed top-0 left-0 right-0 z-50 bg-white dark:bg-zinc-950 border-b border-black/[0.08] dark:border-white/[0.07] transition-transform duration-300 ${
+          visible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         {/* Use relative + absolute trick so center links are truly centered */}
         <div className="relative flex items-center px-4 sm:px-6 lg:px-8 h-14">
           {/* ── LEFT: Hamburger (mobile) + Logo ── */}
