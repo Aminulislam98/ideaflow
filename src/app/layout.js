@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
   // ─── Basic
   title: {
-    default: "IdeaFlow — Share & Discover Ideas",
+    default: "IdeaVault | Share & Discover Ideas",
     template: "%s | IdeaFlow",
   },
   description:

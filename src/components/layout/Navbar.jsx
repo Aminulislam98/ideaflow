@@ -16,6 +16,7 @@ import {
 import { RiMenuFold2Line, RiCloseLargeLine } from "react-icons/ri";
 import { LogoutModal } from "../buttons/LogoutButton";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 const links = [
   { name: "Home", href: "/", protected: false },
@@ -106,11 +107,11 @@ export default function Navbar() {
               <button
                 key={link.href}
                 onClick={() => handleNav(link.href, link.protected)}
-                className={`relative h-full px-4 text-[13.5px] font-bold tracking-[-0.15px] transition-colors duration-150
+                className={`relative h-full px-4 text-[13.5px] font-normal tracking-[-0.15px] transition-colors duration-150 font-black 
                   ${
                     isActive(link.href)
-                      ? "text-black dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-black dark:after:bg-white after:content-[''] after:rounded-t-full"
-                      : "text-black/50 dark:text-white/40 hover:text-black dark:hover:text-white"
+                      ? "text-black uppercase dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-black dark:after:bg-white after:content-[''] after:rounded-t-full"
+                      : " uppercase dark:text-white/40 hover:text-black dark:hover:text-white"
                   }`}
               >
                 {link.name}
@@ -126,7 +127,7 @@ export default function Navbar() {
                 aria-label="Notifications"
                 className="flex items-center justify-center w-10 h-10 rounded-xl text-black dark:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.06] transition-colors duration-150 relative"
               >
-                <HiOutlineBell className="text-[22px]" />
+                <HiOutlineBell className="text-[28px]" />
                 {/* Unread dot — remove if not needed */}
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-zinc-950" />
               </button>
@@ -141,8 +142,19 @@ export default function Navbar() {
                 >
                   {/* Facebook-style avatar: circle + chevron badge */}
                   <div className="relative">
-                    <div className="w-9 h-9 rounded-full bg-black dark:bg-white flex items-center justify-center text-[14px] font-black text-white dark:text-black shrink-0 ring-2 ring-black/10 dark:ring-white/10">
-                      {user.name?.charAt(0).toUpperCase() ?? "U"}
+                    <div className="w-9 h-9 rounded-full shrink-0 ring-2 ring-black/10 dark:ring-white/10 overflow-hidden relative">
+                      {user.image ? (
+                        <Image
+                          fill
+                          src={user.image}
+                          alt={user.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-black dark:bg-white flex items-center justify-center text-[14px] font-black text-white dark:text-black">
+                          {user.name?.charAt(0).toUpperCase() ?? "U"}
+                        </div>
+                      )}
                     </div>
                     {/* Chevron badge at bottom-right like Facebook */}
                     <div
@@ -174,7 +186,7 @@ export default function Navbar() {
                         Profile
                       </Link>
                       <Link
-                        href="/settings"
+                        href="/updateProfile"
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2.5 px-3 py-2.5 text-[13px] font-bold text-black dark:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.06] rounded-xl transition-colors duration-150 tracking-[-0.1px]"
                       >
@@ -235,8 +247,19 @@ export default function Navbar() {
             {/* User info strip (if logged in) */}
             {user && (
               <div className="flex items-center gap-3 px-3 py-3 mb-2 bg-black/[0.03] dark:bg-white/[0.04] rounded-2xl">
-                <div className="w-10 h-10 rounded-full bg-black dark:bg-white flex items-center justify-center text-[15px] font-black text-white dark:text-black shrink-0">
-                  {user.name?.charAt(0).toUpperCase() ?? "U"}
+                <div className="w-9 h-9 rounded-full shrink-0 ring-2 ring-black/10 dark:ring-white/10 overflow-hidden relative">
+                  {user.image ? (
+                    <Image
+                      fill
+                      src={user.image}
+                      alt={user.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-black dark:bg-white flex items-center justify-center text-[14px] font-black text-white dark:text-black">
+                      {user.name?.charAt(0).toUpperCase() ?? "U"}
+                    </div>
+                  )}
                 </div>
                 <div className="min-w-0">
                   <p className="text-[15px] font-black text-black dark:text-white tracking-[-0.2px] truncate">
@@ -278,7 +301,7 @@ export default function Navbar() {
                   <HiOutlineUser className="text-[18px]" /> Profile
                 </Link>
                 <Link
-                  href="/settings"
+                  href="/updateProfile"
                   onClick={closeMobile}
                   className="flex items-center gap-3 px-4 py-3 text-[15px] font-black text-black dark:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.06] rounded-xl transition-colors duration-150 tracking-[-0.2px]"
                 >

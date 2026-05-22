@@ -10,7 +10,9 @@ export async function generateMetadata() {
   const userName = session?.user?.name;
 
   return {
-    title: userName ? `${userName}'s Ideas | IdeaFlow` : "My Ideas | IdeaFlow",
+    title: userName
+      ? `${userName}'s Ideas | IdeaVault`
+      : "My Ideas | IdeaVault",
     description:
       "Manage, edit, and track the performance of your shared ideas.",
     robots: {

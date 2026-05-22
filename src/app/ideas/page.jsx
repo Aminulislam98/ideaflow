@@ -1,8 +1,6 @@
 import FilterBar from "@/components/FilterBar";
 import IdeaCard from "@/components/IdeaCard";
 import { HiLightBulb } from "react-icons/hi";
-
-// Fallback string validation to prevent 'undefined' passing into new URL()
 const baseUrl =
   process.env.NEXT_PUBLIC_CLIENT_URL &&
   process.env.NEXT_PUBLIC_CLIENT_URL !== "undefined"
@@ -10,9 +8,9 @@ const baseUrl =
     : "http://localhost:3000";
 
 export const metadata = {
-  title: "IdeaVault — Discover, Share & Explore Innovative Ideas",
+  title: "Ideas | IdeaVault",
   description:
-    "Explore trending startup ideas, creative projects, business concepts, and innovative solutions on IdeaVault. Share your thoughts, discover inspiration, and connect with creators worldwide.",
+    "Explore trending startup ideas, creative projects, business concepts, and innovative solutions shared by creators on IdeaVault.",
 
   keywords: [
     "startup ideas",
@@ -20,20 +18,13 @@ export const metadata = {
     "innovation platform",
     "creative ideas",
     "entrepreneurship",
-    "project showcase",
     "idea sharing",
     "tech ideas",
     "product ideas",
-    "web app inspiration",
-    "IdeaVault",
     "founder community",
     "side projects",
-    "startup community",
+    "IdeaVault",
   ],
-
-  authors: [{ name: "IdeaVault Team" }],
-  creator: "IdeaVault",
-  publisher: "IdeaVault",
 
   metadataBase: new URL(baseUrl),
 
@@ -42,9 +33,9 @@ export const metadata = {
   },
 
   openGraph: {
-    title: "IdeaVault — Discover Innovative Ideas",
+    title: "Ideas | IdeaVault",
     description:
-      "Browse trending ideas, startup concepts, and creative innovations shared by creators around the world.",
+      "Browse trending startup ideas, business concepts, and creative innovations shared by creators worldwide.",
     url: "/ideas",
     siteName: "IdeaVault",
     images: [
@@ -52,7 +43,7 @@ export const metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "IdeaVault Platform Preview",
+        alt: "IdeaVault — Discover Ideas",
       },
     ],
     locale: "en_US",
@@ -61,7 +52,7 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "IdeaVault — Explore Creative Ideas",
+    title: "Ideas | IdeaVault",
     description:
       "Discover startup ideas, innovations, and inspiring projects from creators worldwide.",
     images: ["/og-image.png"],
@@ -71,17 +62,13 @@ export const metadata = {
   robots: {
     index: true,
     follow: true,
-    nocache: false,
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
     },
   },
-
-  category: "technology",
 };
 
 const getIdeasData = async (search = "", category = "", sort = "") => {

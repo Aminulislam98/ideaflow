@@ -13,7 +13,7 @@ export default function IdeasPageSkeleton() {
       </div>
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8">
+      <div className="max-w-6xl mx-auto  sm:px-8 py-8">
         {/* Section Label */}
         <div className="h-[13px] w-[60px] bg-black/[0.06] dark:bg-white/[0.08] rounded-full animate-pulse mb-6" />
 
