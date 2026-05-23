@@ -37,6 +37,16 @@ export default async function IdeaDetailsPage({ params }) {
   });
   const idea = await res.json();
 
+  // Normalize tags to always be an array
+  const tags = Array.isArray(idea.tags)
+    ? idea.tags
+    : typeof idea.tags === "string"
+      ? idea.tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : [];
+
   return (
     <div className="min-h-screen w-full bg-[#f0f2f5] dark:bg-zinc-950 pt-8 sm:pt-13">
       <div className="max-w-6xl mx-auto  sm:px-8 py-6">
@@ -96,13 +106,6 @@ export default async function IdeaDetailsPage({ params }) {
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              {/* <button className="flex items-center gap-1.5 text-[13px] font-medium text-black dark:text-white hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 border border-black/10 dark:border-white/10 hover:border-blue-200 px-4 py-2 rounded-full transition-all duration-150 tracking-[-0.1px]">
-                <HiThumbUp className="text-[15px]" />
-                Like
-                <span className="text-[12px] font-normal">
-                  {idea.likeCount}
-                </span>
-              </button> */}
               <LikeButton idea={idea} user={user} />
               <IdeaShareButton idea={idea} />
             </div>
@@ -277,7 +280,7 @@ export default async function IdeaDetailsPage({ params }) {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                {idea.tags.map((tag) => (
+                {tags.map((tag) => (
                   <span
                     key={tag}
                     className="text-[12px] font-normal text-black dark:text-white bg-black/[0.05] dark:bg-white/[0.06] hover:bg-black/[0.1] dark:hover:bg-white/[0.1] px-3 py-1 rounded-full tracking-[-0.1px] cursor-pointer transition-all duration-150"

@@ -13,6 +13,7 @@ import {
   ListBox,
 } from "@heroui/react";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 const categories = [
   "Tech",
@@ -36,11 +37,15 @@ const IdeaUpdateForm = ({ idea }) => {
     const formData = new FormData(e.currentTarget);
     const updatedForm = Object.fromEntries(formData.entries());
     try {
+      const { data: token } = await authClient.token();
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${idea._id}`,
         {
           method: "PATCH",
-          headers: { "content-type": "application/json" },
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${token.token}`,
+          },
           body: JSON.stringify(updatedForm),
         },
       );
